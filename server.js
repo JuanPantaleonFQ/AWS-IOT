@@ -24,7 +24,7 @@ const device = awsIot.device({
 	caPath: './certs/AmazonRootCA1.pem', // Path to CA root
 	clientId: 'iotconsole-e6d4c225-2112-400f-8b0f-7936ba8f38e6', // Unique client ID
 	host: 'a3cxdpguroquo1-ats.iot.eu-north-1.amazonaws.com' // AWS IoT Core endpoint
-  });
+});
 
 // RDS Database connection configuration
 const db = mysql.createConnection({
