@@ -31,7 +31,7 @@ const db = mysql.createConnection({
   host: 'ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com', // RDS endpoint
   user: 'admin', // Database username
   password: '1234master', // Database password
-  database: 'ec2-db' // Database name
+  database: 'sensor_data' // Database name
 });
 
 // Connect to the database
