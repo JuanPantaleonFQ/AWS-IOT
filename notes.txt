@@ -1,0 +1,2 @@
+git pull -> 1234
+mysql -h ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com -u admin -p -> 1234master
