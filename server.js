@@ -143,15 +143,14 @@ device.on('connect', () => {
 // Initialize serial communication with Arduino
 const serialPort = new SerialPort('/dev/ttyACM0', { // Renamed 'port' to 'serialPort'
   baudRate: 115200,
-  parser: new SerialPort.parsers.Readline('\n'), // Read data line by line
 });
 
-serialPort.on('open', () => {
-  console.log('Serial port opened.');
-});
+const Readline = require('@serialport/parser-readline'); // Import the Readline parser
 
-serialPort.on('data', (data) => {
-  const value = data.toString().split(','); // Assuming comma-separated values
+const parser = serialPort.pipe(new Readline({ delimiter: '\n' })); // Use the new parser
+
+parser.on('data', (data) => {
+  const value = data.split(','); // Assuming comma-separated values
   const temperature = parseInt(values[0]);
   const humidity = parseInt(values[1]);
   const motion = values[2].trim().toLowerCase() === 'true';
@@ -215,7 +214,3 @@ app.get('/', (req, res) => {
 app.listen(serverPort, () => { // Changed to serverPort here
   console.log(`Server running at http://localhost:${serverPort}`);
 });
-
-
-
-
