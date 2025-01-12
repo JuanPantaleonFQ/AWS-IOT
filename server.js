@@ -19,19 +19,19 @@ const port = 80;
 
 // AWS IoT Device configuration
 const device = awsIot.device({
-  keyPath: './certs/private.pem.key', // Path to private key
-  certPath: './certs/certificate.pem.crt', // Path to certificate
-  caPath: './certs/AmazonRootCA1.pem', // Path to CA root
-  clientId: 'YourClientId', // Unique client ID
-  host: 'a3cxdpguroquo1-ats.iot.eu-north-1.amazonaws.com' // AWS IoT Core endpoint
-});
+	keyPath: './certs/private.pem.key', // Path to private key
+	certPath: './certs/284f0c547a585301d92eff206db0ca50354c59b8f15a1d9e33d4b7742146910b-certificate.pem.crt', // Path to certificate
+	caPath: './certs/AmazonRootCA1.pem', // Path to CA root
+	clientId: 'iotconsole-e6d4c225-2112-400f-8b0f-7936ba8f38e6', // Unique client ID
+	host: 'a3cxdpguroquo1-ats.iot.eu-north-1.amazonaws.com' // AWS IoT Core endpoint
+  });
 
 // RDS Database connection configuration
 const db = mysql.createConnection({
-  host: 'your-rds-endpoint', // RDS endpoint
-  user: 'your-username', // Database username
-  password: 'your-password', // Database password
-  database: 'your-database-name' // Database name
+  host: 'ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com', // RDS endpoint
+  user: 'admin', // Database username
+  password: 'masterpassword', // Database password
+  database: 'ec2-db' // Database name
 });
 
 // Connect to the database
