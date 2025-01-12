@@ -48,8 +48,7 @@ device.on('connect', () => {
         device.publish('test','Hello mqtt');
         isSubscribed = true; // Prevent further subscriptions
         //?aqui murio
-        device.on('message', (topic, payload) => {
-          console.log(message,topic, payload);
+        device.on('message', (topic, payload) => {         
           try {
             const data = JSON.parse(payload.toString());
             console.log(`Received data on ${topic}:`, data);
