@@ -56,6 +56,8 @@ device.on('connect', () => {
 });
 
 device.on('message', (topic, payload) => {
+  console.log(payload);
+  console.log(payload.toString());
   const data = JSON.parse(payload.toString());
   console.log(`Received data on topic ${topic}:`, data);
 
