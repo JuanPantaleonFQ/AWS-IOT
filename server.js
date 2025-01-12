@@ -44,39 +44,47 @@ db.connect(err => {
 });
 
 // Subscribe to the topic
+let isSubscribed = false;
+
 device.on('connect', () => {
-  console.log('Connected to AWS IoT Core.');
-  device.subscribe('home/sensor_data', (err, granted) => {
-    if (err) {
-      console.error('Failed to subscribe:', err);
-    } else {
-      console.log('Successfully subscribed to topic:', granted);
-    }
-  });
+  if (!isSubscribed) {
+    console.log('Connected to AWS IoT Core.');
+    device.subscribe('home/sensor_data', (err, granted) => {
+      if (err) {
+        console.error('Failed to subscribe:', err);
+      } else {
+        console.log('Successfully subscribed ', granted);
+        isSubscribed = true; // Prevent further subscriptions
+      }
+    });
+  }
 });
 
+
 device.on('disconnect', (reason) => {
-  console.log('Device disconnected from AWS IoT Core. Reason:', reason);
+  console.log('Device disconnected AWS IoT Core. Reason:', reason);
 });
 
 device.on('message', (topic, payload) => {
-  console.log(payload);
-  console.log(payload.toString());
-  const data = JSON.parse(payload.toString());
-  console.log(`Received data on topic ${topic}:`, data);
+  try {
+    const data = JSON.parse(payload.toString());
+    console.log(`Received data on ${topic}:`, data);
 
-  // Insert data into the RDS database
-  const query = 'INSERT INTO sensor_data (temperature, humidity, motion, analog_sensor, timestamp) VALUES (?, ?, ?, ?, ?)';
-  const values = [data.temperature, data.humidity, data.motion, data.analog_sensor, new Date()];
+    const query = 'INSERT INTO sensor_data (temperature, humidity, motion, analog_sensor, timestamp) VALUES (?, ?, ?, ?, ?)';
+    const values = [data.temperature, data.humidity, data.motion, data.analog_sensor, new Date()];
 
-  db.query(query, values, (err, result) => {
-    if (err) {
-      console.error('Failed to insert data:', err.stack);
-    } else {
-      console.log('Data inserted successfully:', result.insertId);
-    }
-  });
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error('Failed to insert data:', err.stack);
+      } else {
+        console.log('Data inserted successfully:', result.insertId);
+      }
+    });
+  } catch (err) {
+    console.error('Failed to parse message payload:', err);
+  }
 });
+
 
 // Handle errors
 device.on('error', (error) => {
