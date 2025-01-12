@@ -100,54 +100,15 @@
 // });
 
 // end 
-const express = require('express');
-const awsIot = require('aws-iot-device-sdk');
-const mysql = require('mysql');
 const { SerialPort } = require('serialport');  // Correct import
-const { Readline } = require('@serialport/parser-readline');  // Correct parser import
+const { ReadlineParser } = require('@serialport/parser-readline');  // Correct parser import
 
-const app = express();
-const serverPort = 80;
-
-// AWS IoT Device configuration
-const device = awsIot.device({
-  keyPath: './certs/private.pem.key',
-  certPath: './certs/284f0c547a585301d92eff206db0ca50354c59b8f15a1d9e33d4b7742146910b-certificate.pem.crt',
-  caPath: './certs/AmazonRootCA1.pem',
-  clientId: 'iotconsole-e6d4c225-2112-400f-8b0f-7936ba8f38e6',
-  host: 'a3cxdpguroquo1-ats.iot.eu-north-1.amazonaws.com',
+const serialPort = new SerialPort({
+  path: '/dev/ttyACM0',  // Specify the correct port
+  baudRate: 115200,      // Set baud rate
 });
 
-// RDS Database connection configuration
-const db = mysql.createConnection({
-  host: 'ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com',
-  user: 'admin',
-  password: '1234master',
-  database: 'sensor_data',
-});
-
-// Connect to the database
-db.connect(err => {
-  if (err) {
-    console.error('Database connection failed:', err.stack);
-    return;
-  }
-  console.log('Connected to database.');
-});
-
-// Subscribe to the topic
-device.on('connect', () => {
-  console.log('Connected to AWS IoT Core.');
-  device.subscribe('device.public');
-});
-
-// Initialize serial communication with Arduino
-const serialPort = new SerialPort({ 
-  path: '/dev/ttyACM0', // Specify port path
-  baudRate: 115200 // Specify baud rate
-});
-
-const parser = serialPort.pipe(new Readline({ delimiter: '\n' })); // Use the Readline parser
+const parser = serialPort.pipe(new ReadlineParser({ delimiter: '\n' })); // Use the correct parser
 
 parser.on('data', (data) => {
   const value = data.split(','); // Assuming comma-separated values
@@ -181,37 +142,3 @@ parser.on('data', (data) => {
     }
   });
 });
-
-// Handle errors
-device.on('error', (error) => {
-  console.error('AWS IoT Error:', error);
-});
-
-db.on('error', (error) => {
-  console.error('Database Error:', error);
-});
-
-// Express server setup
-app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <title>IOT AWS DEVICE</title>
-      </head>
-      <body>
-        <h1>Hello Juan and Lucas!</h1>
-        <p>The page will refresh every 10 seconds.</p>
-        <script>
-          setInterval(function(){
-            location.reload();
-          }, 10000); // Refresh every 10 seconds
-        </script>
-      </body>
-    </html>
-  `);
-});
-
-app.listen(serverPort, () => {
-  console.log(`Server running at http://localhost:${serverPort}`);
-});
-
