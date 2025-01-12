@@ -1,15 +1,3 @@
-// const express = require('express');
-// const app = express();
-// const port = 80;
-
-// app.get('/', (req, res) => {
-// 	res.send('Hello juan and lucas!');
-
-// });
-
-// app.listen(port, () => {
-// 	console.log(`Server running  at http://localhost:${port}`);
-// });
 const express = require('express');
 const awsIot = require('aws-iot-device-sdk');
 const mysql = require('mysql');
@@ -18,6 +6,7 @@ const app = express();
 const port = 80;
 
 // AWS IoT Device configuration
+//!Comprobar si tengo que poner los certificados de rapsberri o de iot core o de que
 const device = awsIot.device({
 	keyPath: './certs/private.pem.key', // Path to private key
 	certPath: './certs/284f0c547a585301d92eff206db0ca50354c59b8f15a1d9e33d4b7742146910b-certificate.pem.crt', // Path to certificate
@@ -43,6 +32,8 @@ db.connect(err => {
   console.log('Connected to database.');
 });
 
+
+
 // Subscribe to the topic
 let isSubscribed = false;
 
@@ -54,6 +45,7 @@ device.on('connect', () => {
         console.error('Failed to subscribe:', err);
       } else {
         console.log('Successfully subscribed ', granted);
+        device.publish('test','Hello mqtt');
         isSubscribed = true; // Prevent further subscriptions
       }
     });
@@ -66,6 +58,7 @@ device.on('disconnect', (reason) => {
 });
 
 device.on('message', (topic, payload) => {
+  console.log(message,topic, payload);
   try {
     const data = JSON.parse(payload.toString());
     console.log(`Received data on ${topic}:`, data);
