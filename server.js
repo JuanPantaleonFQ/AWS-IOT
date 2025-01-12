@@ -30,7 +30,7 @@ const device = awsIot.device({
 const db = mysql.createConnection({
   host: 'ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com', // RDS endpoint
   user: 'admin', // Database username
-  password: 'masterpassword', // Database password
+  password: '1234', // Database password
   database: 'ec2-db' // Database name
 });
 
