@@ -55,6 +55,10 @@ device.on('connect', () => {
   });
 });
 
+device.on('disconnect', (reason) => {
+  console.log('Device disconnected from AWS IoT Core. Reason:', reason);
+});
+
 device.on('message', (topic, payload) => {
   console.log(payload);
   console.log(payload.toString());
