@@ -80,7 +80,7 @@ app.get('/', (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>Refresh Every 10 Seconds</title>
+        <title>IOT AWS DEVICE</title>
       </head>
       <body>
         <h1>Hello Juan and Lucas!</h1>
