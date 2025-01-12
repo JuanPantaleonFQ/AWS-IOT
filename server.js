@@ -46,7 +46,7 @@ db.connect(err => {
 // Subscribe to the topic
 device.on('connect', () => {
   console.log('Connected to AWS IoT Core.');
-  device.subscribe('home/sensor_data'); // Topic from your Arduino script
+  device.subscribe('home/sensor_data'); 
 });
 
 device.on('message', (topic, payload) => {
@@ -76,24 +76,81 @@ db.on('error', (error) => {
 });
 
 // Express server setup
+// app.get('/', (req, res) => {
+//   res.send(`
+//     <html>
+//       <head>
+//         <title>IOT AWS DEVICE</title>
+//       </head>
+//       <body>
+//         <h1>Hello Juan and Lucas!</h1>
+//         <p>The page will refresh every 10 seconds.</p>
+//         <script>
+//           setInterval(function(){
+//             location.reload();
+//           }, 10000); // Refresh every 10 seconds
+//         </script>
+//       </body>
+//     </html>
+//   `);
+// });
 app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <title>IOT AWS DEVICE</title>
-      </head>
-      <body>
-        <h1>Hello Juan and Lucas!</h1>
-        <p>The page will refresh every 10 seconds.</p>
-        <script>
-          setInterval(function(){
-            location.reload();
-          }, 10000); // Refresh every 10 seconds
-        </script>
-      </body>
-    </html>
-  `);
+  // Query the database to get the latest sensor data
+  const query = 'SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 10'; // Fetch the 10 most recent entries
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Failed to fetch data:', err.stack);
+      res.send('Error fetching data from the database.');
+      return;
+    }
+
+    // Build an HTML table to display the data
+    let tableRows = '';
+    results.forEach(row => {
+      tableRows += `
+        <tr>
+          <td>${row.timestamp}</td>
+          <td>${row.temperature}</td>
+          <td>${row.humidity}</td>
+          <td>${row.motion}</td>
+          <td>${row.analog_sensor}</td>
+        </tr>
+      `;
+    });
+
+    res.send(`
+      <html>
+        <head>
+          <title>IOT AWS DEVICE</title>
+        </head>
+        <body>
+          <h1>Hello Juan and Lucas!</h1>
+          <p>The data will refresh every 10 seconds.</p>
+          <table border="1">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Temperature</th>
+                <th>Humidity</th>
+                <th>Motion</th>
+                <th>Analog Sensor</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tableRows}
+            </tbody>
+          </table>
+          <script>
+            setInterval(function(){
+              location.reload();
+            }, 10000); // Refresh every 10 seconds
+          </script>
+        </body>
+      </html>
+    `);
+  });
 });
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
