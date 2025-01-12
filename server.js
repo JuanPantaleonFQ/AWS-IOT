@@ -77,13 +77,28 @@ db.on('error', (error) => {
 
 // Express server setup
 app.get('/', (req, res) => {
-  res.send('Hello juan and lucas!');
+  res.send(`
+    <html>
+      <head>
+        <title>Refresh Every 10 Seconds</title>
+      </head>
+      <body>
+        <h1>Hello Juan and Lucas!</h1>
+        <p>The page will refresh every 10 seconds.</p>
+        <script>
+          setInterval(function(){
+            location.reload();
+          }, 10000); // Refresh every 10 seconds
+        </script>
+      </body>
+    </html>
+  `);
 });
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-//end :)
+//end 
 
 
