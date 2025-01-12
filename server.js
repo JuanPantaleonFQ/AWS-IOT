@@ -46,7 +46,13 @@ db.connect(err => {
 // Subscribe to the topic
 device.on('connect', () => {
   console.log('Connected to AWS IoT Core.');
-  device.subscribe('home/sensor_data'); 
+  device.subscribe('home/sensor_data', (err, granted) => {
+    if (err) {
+      console.error('Failed to subscribe:', err);
+    } else {
+      console.log('Successfully subscribed to topic:', granted);
+    }
+  });
 });
 
 device.on('message', (topic, payload) => {
