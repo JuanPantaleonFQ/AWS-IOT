@@ -103,11 +103,11 @@
 const express = require('express');
 const awsIot = require('aws-iot-device-sdk');
 const mysql = require('mysql');
-const SerialPort = require('serialport'); // Correct import
-const { Readline } = require('@serialport/parser-readline'); // Correct import
+const { SerialPort } = require('serialport');  // Correct import
+const { Readline } = require('@serialport/parser-readline');  // Correct parser import
 
 const app = express();
-const serverPort = 80; // Renamed the express server port to serverPort
+const serverPort = 80;
 
 // AWS IoT Device configuration
 const device = awsIot.device({
@@ -142,11 +142,12 @@ device.on('connect', () => {
 });
 
 // Initialize serial communication with Arduino
-const serialPort = new SerialPort('/dev/ttyACM0', { // Correct way to instantiate SerialPort
-  baudRate: 115200, // Baud rate to match the Arduino settings
+const serialPort = new SerialPort({ 
+  path: '/dev/ttyACM0', // Specify port path
+  baudRate: 115200 // Specify baud rate
 });
 
-const parser = serialPort.pipe(new Readline({ delimiter: '\n' })); // Correct way to use Readline parser
+const parser = serialPort.pipe(new Readline({ delimiter: '\n' })); // Use the Readline parser
 
 parser.on('data', (data) => {
   const value = data.split(','); // Assuming comma-separated values
@@ -210,6 +211,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.listen(serverPort, () => { // Changed to serverPort here
+app.listen(serverPort, () => {
   console.log(`Server running at http://localhost:${serverPort}`);
 });
+
