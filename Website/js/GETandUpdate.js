@@ -17,4 +17,4 @@ async function fetchDataFromSQS() {
     }
   }
 
-  setInterval(fetchDataFromSQS(), 1000);
+  setInterval(fetchDataFromSQS, 1000);
