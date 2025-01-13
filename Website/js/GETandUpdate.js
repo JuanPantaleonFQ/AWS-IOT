@@ -5,9 +5,9 @@ async function fetchDataFromSQS() {
   
       if (response.ok) {
         console.log('Received data from SQS:', data);
-        $("temperature").text(`${data.temperature}°C`);
-        $("humidity").text(`${data.humidity}%`);
-        $("lux").text(`${data.lux}`);
+        $("#temperature").text(`${data.temperature}°C`);
+        $("#humidity").text(`${data.humidity}%`);
+        $("#lux").text(`${data.lux}`);
         
       } else {
         console.error('Failed to fetch data:', data.error);
