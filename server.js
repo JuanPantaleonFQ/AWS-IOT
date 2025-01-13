@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const AWS = require('aws-sdk');
+const path = require('path');
 
 // Configure AWS SDK (region should match your SQS queue's region)
 AWS.config.update({ region: 'eu-north-1' });  // Change to your SQS region
