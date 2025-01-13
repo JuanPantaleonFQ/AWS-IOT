@@ -55,8 +55,8 @@ function startSQSPolling() {
             console.log('Received message:', payload);
             lastUpdate = payload;
 
-            const query = 'INSERT INTO sensor_data (temperature, humidity, motion, analog_sensor, timestamp) VALUES (?, ?, ?, ?, ?)';
-            const values = [payload.temperature, payload.humidity, payload.motion, payload.analog_sensor, new Date()];
+            const query = 'INSERT INTO sensor_data (temperature, humidity, motion, lux, timestamp) VALUES (?, ?, ?, ?, ?)';
+            const values = [payload.temperature, payload.humidity, payload.motion, payload.lux, new Date()];
 
             db.query(query, values, (err, result) => {
               if (err) {
@@ -114,7 +114,7 @@ app.get('/', (req, res) => {
           <td>${row.temperature}</td>
           <td>${row.humidity}</td>
           <td>${row.motion}</td>
-          <td>${row.analog_sensor}</td>
+          <td>${row.Lux}</td>
         </tr>
       `;
     });
@@ -134,7 +134,7 @@ app.get('/', (req, res) => {
                 <th>Temperature</th>
                 <th>Humidity</th>
                 <th>Motion</th>
-                <th>Analog Sensor</th>
+                <th>Lux</th>
               </tr>
             </thead>
             <tbody>
