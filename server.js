@@ -40,7 +40,7 @@ let isSubscribed = false;
 device.on('connect', () => {
   if (!isSubscribed) {
     console.log('Connected to AWS IoT Core.');
-    device.subscribe('home/sensor_data', (err, granted) => {
+    device.subscribe('#', (err, granted) => {
       if (err) {
         console.error('Failed to subscribe:', err);
       } else {
