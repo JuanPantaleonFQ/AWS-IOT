@@ -9,6 +9,8 @@ AWS.config.update({ region: 'eu-north-1' });  // Change to your SQS region
 const app = express();
 const sqs = new AWS.SQS();
 
+app.use(express.static(path.join(__dirname, 'Website')));//So the server can find static files
+
 // Define the URL of your SQS queue
 const queueURL = 'https://sqs.eu-north-1.amazonaws.com/559050216884/QueueForIOT';  // Replace with your queue URL
 
