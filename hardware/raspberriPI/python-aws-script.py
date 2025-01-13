@@ -49,7 +49,7 @@ try:
                 "temperature": int(temperature),
                 "humidity": int(humidity),
                 "motion": motion.lower() == "true",
-                "analog_sensor": int(analog_sensor)          
+                "lux": int(analog_sensor)          
             }
            
 
