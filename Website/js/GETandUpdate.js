@@ -5,9 +5,6 @@ async function fetchDataFromSQS() {
   
       if (response.ok) {
         console.log('Received data from SQS:', data);
-  
-        // Do something with the data, e.g., update the UI
-        document.getElementById('output').innerText = JSON.stringify(data, null, 2);
       } else {
         console.error('Failed to fetch data:', data.error);
       }
@@ -15,4 +12,5 @@ async function fetchDataFromSQS() {
       console.error('Error fetching data:', err);
     }
   }
-  
+
+fetchDataFromSQS()  
