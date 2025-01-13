@@ -146,7 +146,7 @@ app.get('/', (req, res) => {
     `);
   });
     */  
-  res.sendFile(path.join(__dirname, 'public', './Website/index.html'));
+  res.sendFile(path.join(__dirname, 'Website', 'index.html'));
 });
 
 const port = 80;
