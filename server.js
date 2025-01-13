@@ -45,41 +45,41 @@ device.on('connect', () => {
         console.error('Failed to subscribe:', err);
       } else {
         console.log('Successfully subscribed ', granted);
-        device.publish('test','Hello mqtt');
+       
         isSubscribed = true; // Prevent further subscriptions
-        //?aqui murio
-        device.on('message', (topic, payload) => {         
-          try {
-            const data = JSON.parse(payload.toString());
-            console.log(`Received data on ${topic}:`, data);
-        
-            const query = 'INSERT INTO sensor_data (temperature, humidity, motion, analog_sensor, timestamp) VALUES (?, ?, ?, ?, ?)';
-            const values = [data.temperature, data.humidity, data.motion, data.analog_sensor, new Date()];
-        
-            db.query(query, values, (err, result) => {
-              if (err) {
-                console.error('Failed to insert data:', err.stack);
-              } else {
-                console.log('Data inserted successfully:', result.insertId);
-              }
-            });
-          } catch (err) {
-            console.error('Failed to parse message payload:', err);
-          }
-        });
+
       }
     });
   }
 });
 
-
 device.on('disconnect', (reason) => {
   console.log('Device disconnected AWS IoT Core. Reason:', reason);
 });
 
+device.on("packetreceive", (packet) => {
+  console.log("Paquete recibido:", packet);
+});
 
+device.on('message', (topic, payload) => {  
+  try {
+    const data = JSON.parse(payload.toString());
+    console.log(`Received data on ${topic}:`, data);
 
+    const query = 'INSERT INTO sensor_data (temperature, humidity, motion, analog_sensor, timestamp) VALUES (?, ?, ?, ?, ?)';
+    const values = [data.temperature, data.humidity, data.motion, data.analog_sensor, new Date()];
 
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error('Failed to insert data:', err.stack);
+      } else {
+        console.log('Data inserted successfully:', result.insertId);
+      }
+    });
+  } catch (err) {
+    console.error('Failed to parse message payload:', err);
+  }
+});
 
 
 // Handle errors
