@@ -158,13 +158,13 @@ const mysql = require('mysql');
 const AWS = require('aws-sdk');
 
 // Configure AWS SDK (region should match your SQS queue's region)
-AWS.config.update({ region: 'eu-west-3' });  // Change to your SQS region
+AWS.config.update({ region: 'eu-north-1' });  // Change to your SQS region
 
 const app = express();
 const sqs = new AWS.SQS();
 
 // Define the URL of your SQS queue
-const queueURL = 'https://sqs.eu-west-3.amazonaws.com/692518661719/testStandard';  // Replace with your queue URL
+const queueURL = 'https://sqs.eu-north-1.amazonaws.com/559050216884/QueueForIOT';  // Replace with your queue URL
 
 // RDS Database connection configuration
 const db = mysql.createConnection({
