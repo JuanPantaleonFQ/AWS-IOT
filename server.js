@@ -14,6 +14,8 @@ app.use(express.static(path.join(__dirname, 'Website')));//So the server can fin
 // Define the URL of your SQS queue
 const queueURL = 'https://sqs.eu-north-1.amazonaws.com/559050216884/QueueForIOT';  // Replace with your queue URL
 
+var lastUpdate;
+
 // RDS Database connection configuration
 const db = mysql.createConnection({
   host: 'ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com', // RDS endpoint
@@ -51,6 +53,7 @@ function startSQSPolling() {
           try {
             const payload = JSON.parse(message.Body);
             console.log('Received message:', payload);
+            lastUpdate = payload;
 
             const query = 'INSERT INTO sensor_data (temperature, humidity, motion, analog_sensor, timestamp) VALUES (?, ?, ?, ?, ?)';
             const values = [payload.temperature, payload.humidity, payload.motion, payload.analog_sensor, new Date()];
@@ -156,4 +159,15 @@ app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-
+app.get('/get-from-sqs', (req, res) => {
+  const params = {
+    QueueUrl: queueURL,
+    MaxNumberOfMessages: 1, // Adjust as needed
+    WaitTimeSeconds: 10     // Use long polling to reduce unnecessary requests
+  };
+  if(lastUpdate){
+    res.send(lastUpdate);
+  }else{
+    res.send({ message: 'No messages available.' });
+  }
+});
