@@ -91,6 +91,7 @@ function startSQSPolling() {
 startSQSPolling();
 
 app.get('/', (req, res) => {
+  /*
   const query = 'SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 10'; // Fetch the 10 most recent entries
   db.query(query, (err, results) => {
     if (err) {
@@ -143,6 +144,8 @@ app.get('/', (req, res) => {
       </html>
     `);
   });
+    */  
+  res.sendFile(path.join(__dirname, 'public', './Website/index.html'));
 });
 
 const port = 80;
