@@ -100,7 +100,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'Website', 'index.html'));
 });
 app.get('/prefferedSettings', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Website', './prefferedSettings/index.html'));
+  res.sendFile(path.join(__dirname, 'Website', './prefferredSettings/index.html'));
 });
 app.get('/history', (req, res) => {
   res.sendFile(path.join(__dirname, 'Website', './history/index.html'));
@@ -126,3 +126,4 @@ app.get('/get-from-sqs', (req, res) => {
 
 //please end this insesant nightmare that is my existance every moment of happiness is just a reminder of the pain that follows.
 //I am glad there is nothing after death since any amount of conciounsness translates to unimaginable and horrifying amount of pain, if there is a hell this is it.
+//I want to eat my skin sometimes
