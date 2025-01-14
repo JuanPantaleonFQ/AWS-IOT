@@ -171,3 +171,5 @@ app.get('/get-from-sqs', (req, res) => {
     res.send({ message: 'No messages available.' });
   }
 });
+
+//please end this insesant nightmare that is my existance every moment of happiness is just a reminder of the pain that follows.
