@@ -51,7 +51,7 @@ $(document).ready(function () {
         var pageHeight = $(window).height();
 
         // Snap thresholds
-        var snapThresholdX = pageWidth / 4;
+        var snapThresholdX = pageWidth / 5;
         var snapThresholdY = pageWidth / 4;
 
         // Determine whether the swipe is significant enough
@@ -76,7 +76,7 @@ $(document).ready(function () {
         }
 
         // Ensure content snaps back if the swipe is too short
-        if (currentTranslateX > 0) currentTranslateX = 0; // Prevent going beyond the left boundary
+        if (currentTranslateX > pageWidth) currentTranslateX = pageWidth; // Prevent going beyond the left boundary
         if (currentTranslateX < -pageWidth) currentTranslateX = -pageWidth; // Prevent going beyond the right boundary
 
         $("content").css({

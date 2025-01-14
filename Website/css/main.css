@@ -43,6 +43,17 @@ content{
   align-items: center;
 
   transition:2s;
+
+  position:absolute;
+}
+#left{
+ left:-100%;
+}
+#right{
+ right:-100%;
+}
+#down{
+ bottom:-100%;
 }
 
 #statusBar{

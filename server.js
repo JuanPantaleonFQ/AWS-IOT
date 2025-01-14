@@ -131,3 +131,4 @@ app.get('/get-from-sqs', (req, res) => {
 // :) this is the face I make to delude myself of the reality I suffer. I  a m  s o  h a p p y :)
 // hihihi is how I laugh when I see myself suffering because I have no other emotion left :)
 //nothing brings pleasure everything is mixed with unbearable pain except when I am unconcious
+//I never know what day it is, time passes and I have no recolection. I only remember the pain 
