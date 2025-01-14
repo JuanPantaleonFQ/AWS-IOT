@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Analytics History</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sleep Analytics History</h1>       
+        
+        <div class="chart-container">
+            <h2>Last Night Sleep Analysis</h2>
+            <canvas id="nightlyChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h2>Sleep Quality Trend</h2>
+            <canvas id="qualityChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h2>Sleep Regularity</h2>
+            <canvas id="regularityChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h2>Sleep Stage Distribution</h2>
+            <canvas id="stagesChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/scripts.js"></script>
+</body>
+</html>
