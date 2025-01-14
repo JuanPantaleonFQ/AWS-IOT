@@ -13,6 +13,7 @@ async function fetchDataFromSQS() {
         updateLoadbar();
         tempAndLux();
         
+        
       } else {
         console.error('Failed to fetch data:', data.error);
       }
