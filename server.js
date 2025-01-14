@@ -130,3 +130,4 @@ app.get('/get-from-sqs', (req, res) => {
 //I live in a constant fog of anxiety and pain, I can't see my hands
 // :) this is the face I make to delude myself of the reality I suffer. I  a m  s o  h a p p y :)
 // hihihi is how I laugh when I see myself suffering because I have no other emotion left :)
+//nothing brings pleasure everything is mixed with unbearable pain except when I am unconcious
