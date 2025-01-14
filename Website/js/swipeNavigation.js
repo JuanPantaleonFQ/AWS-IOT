@@ -1,10 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var startX, startY, currentX, currentY, endX, endY;
     var currentTranslateX = 0; // Tracks the current X position of the content
     var currentTranslateY = 0; // Tracks the current Y position of the content
     var isSwiping = false;
 
-    $('body').on('touchstart', function(e) {
+    $('body').on('touchstart', function (e) {
         var touchStart = e.originalEvent.touches[0];
         startX = touchStart.pageX;
         startY = touchStart.pageY;
@@ -14,7 +14,7 @@ $(document).ready(function() {
         currentY = startY;
     });
 
-    $('body').on('touchmove', function(e) {
+    $('body').on('touchmove', function (e) {
         if (!isSwiping) return;
         e.preventDefault(); // Optional: Prevent scrolling during swipe
 
@@ -31,12 +31,12 @@ $(document).ready(function() {
             // Horizontal swipe
             $("content").css("transform", `translateX(${currentTranslateX + diffX}px)`);
         } else {
-            // Vertical swipe
+            // Vertical swipe (inverted)
             $("content").css("transform", `translateY(${currentTranslateY + diffY}px)`);
         }
     });
 
-    $('body').on('touchend', function(e) {
+    $('body').on('touchend', function (e) {
         if (!isSwiping) return;
         isSwiping = false;
 
@@ -51,7 +51,7 @@ $(document).ready(function() {
         var pageHeight = $(window).height();
 
         // Snap thresholds
-        var snapThresholdX = pageHeight / 2;
+        var snapThresholdX = pageWidth / 2;
         var snapThresholdY = pageHeight / 2;
 
         // Determine whether the swipe is significant enough
@@ -65,12 +65,12 @@ $(document).ready(function() {
                 }
             }
         } else {
-            // Vertical swipe
+            // Vertical swipe (inverted)
             if (Math.abs(diffY) > snapThresholdY) {
                 if (diffY > 0) {
-                    currentTranslateY -= pageHeight; // Swipe down
+                    currentTranslateY += pageHeight; // Swipe down
                 } else {
-                    currentTranslateY += pageHeight; // Swipe up
+                    currentTranslateY -= pageHeight; // Swipe up
                 }
             }
         }
@@ -80,7 +80,7 @@ $(document).ready(function() {
         if (currentTranslateX < -pageWidth) currentTranslateX = -pageWidth; // Prevent going beyond the right boundary
 
         $("content").css({
-            "transition": "transform 0.3s ease", // Smooth snapping animation
+            "transition": "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)", // Smooth curved snapping animation
             "transform": `translate(${currentTranslateX}px, ${currentTranslateY}px)`
         });
 
