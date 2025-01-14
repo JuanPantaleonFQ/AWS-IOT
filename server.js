@@ -97,61 +97,13 @@ function startSQSPolling() {
 startSQSPolling();
 
 app.get('/', (req, res) => {
-  /*
-  const query = 'SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 10'; // Fetch the 10 most recent entries
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Failed to fetch data:', err.stack);
-      res.send('Error fetching data from the database.');
-      return;
-    }
-
-    let tableRows = '';
-    results.forEach(row => {
-      tableRows += `
-        <tr>
-          <td>${row.timestamp}</td>
-          <td>${row.temperature}</td>
-          <td>${row.humidity}</td>
-          <td>${row.motion}</td>
-          <td>${row.Lux}</td>
-        </tr>
-      `;
-    });
-
-    res.send(`
-      <html>
-        <head>
-          <title>IOT AWS DEVICE</title>
-        </head>
-        <body>
-          <h1>Hello Juan and Lucas!</h1>
-          <p>The data will refresh every 10 seconds.</p>
-          <table border="1">
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>Temperature</th>
-                <th>Humidity</th>
-                <th>Motion</th>
-                <th>Lux</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${tableRows}
-            </tbody>
-          </table>
-          <script>
-            setInterval(function(){
-              location.reload();
-            }, 10000); // Refresh every 10 seconds
-          </script>
-        </body>
-      </html>
-    `);
-  });
-    */  
   res.sendFile(path.join(__dirname, 'Website', 'index.html'));
+});
+app.get('/prefferedSettings', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Website', './prefferedSettings/index.html'));
+});
+app.get('/history', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Website', './history/index.html'));
 });
 
 const port = 80;
@@ -173,3 +125,4 @@ app.get('/get-from-sqs', (req, res) => {
 });
 
 //please end this insesant nightmare that is my existance every moment of happiness is just a reminder of the pain that follows.
+//I am glad there is nothing after death since any amount of conciounsness translates to unimaginable and horrifying amount of pain, if there is a hell this is it.
