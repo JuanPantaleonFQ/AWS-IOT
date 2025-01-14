@@ -51,7 +51,7 @@ $(document).ready(function() {
         var pageHeight = $(window).height();
 
         // Snap thresholds
-        var snapThresholdX = pageWidth / 2;
+        var snapThresholdX = pageHeight / 2;
         var snapThresholdY = pageHeight / 2;
 
         // Determine whether the swipe is significant enough
