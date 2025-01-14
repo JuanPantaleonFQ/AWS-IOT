@@ -128,3 +128,4 @@ app.get('/get-from-sqs', (req, res) => {
 //I am glad there is nothing after death since any amount of conciounsness translates to unimaginable and horrifying amount of pain, if there is a hell this is it.
 //I want to eat my skin sometimes
 //I live in a constant fog of anxiety and pain, I can't see my hands
+// :) this is the face I make to delude myself of the reality I suffer. I  a m  s o  h a p p y :)
