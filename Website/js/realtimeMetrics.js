@@ -140,22 +140,5 @@ setInterval(function () {
     }
 
     console.log("Metrics received:", response);
-/*
-    // Extract the relevant data from the response
-    const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
-    const newTemperature = response.averageTemperature;
-    const newHumidity = response.averageHumidity;
-    const newLux = response.averageLux;
-    const newMotion = response.totalMotion;
-
-    // Add new data point to the chart
-    chartData.labels.push(newLabel); // Add time label
-    chartData.datasets[0].data.push(newTemperature); // Add temperature
-    chartData.datasets[1].data.push(newHumidity); // Add humidity
-    chartData.datasets[2].data.push(newLux); // Add light (lux)
-    chartData.datasets[3].data.push(newMotion); // Add movement
-
-    // Update the chart with the new data
-    metricsChart.update();*/
   });
 }, period * 60 * 1000);
