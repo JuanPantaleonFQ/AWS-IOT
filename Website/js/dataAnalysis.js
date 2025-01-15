@@ -81,5 +81,5 @@ async function createChartForSleepAnalysis(n, date) {
         },
     });
 
-    return graph;
+    return charts[n];
 }
