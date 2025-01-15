@@ -52,8 +52,12 @@ content{
     flex-direction: column;
 }
 #right{
- right:-100%;
- overflow-y: auto;
+  right: -100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  box-sizing: border-box;
 }
 #down{
  bottom:-100%;
@@ -170,6 +174,7 @@ button{
   padding:1rem;
   margin:0.5rem;
   background-color: rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 .car h2{
   margin-left:-0.5rem;
