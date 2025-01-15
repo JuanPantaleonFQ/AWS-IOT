@@ -30,10 +30,11 @@ $(document).ready(function () {
             // Determine swipe direction on first significant move
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 swipeDirection = "horizontal";
-            } else if (diffY < 0) { // Allow only upward vertical swipes
+            } else if (diffY < 0 || (diffY > 0 && currentTranslateY !== 0)) {
+                // Allow upward swipes or downward swipes only if not at the original position
                 swipeDirection = "vertical";
             } else {
-                // Ignore downward swipe
+                // Prevent downward swipe from the original position
                 swipeDirection = null;
                 return;
             }
@@ -43,8 +44,12 @@ $(document).ready(function () {
             e.preventDefault(); // Prevent scrolling during horizontal swipe
             $("content").css("transform", `translateX(${currentTranslateX + diffX}px)`);
         } else if (swipeDirection === "vertical") {
-            e.preventDefault(); // Prevent scrolling during upward swipe
-            $("content").css("transform", `translateY(${currentTranslateY + diffY}px)`);
+            e.preventDefault(); // Prevent scrolling during vertical swipe
+            var newTranslateY = currentTranslateY + diffY;
+            if (newTranslateY <= 0 && newTranslateY >= -$(window).height()) {
+                // Constrain vertical movement to between 0 and -1 screen height
+                $("content").css("transform", `translateY(${newTranslateY}px)`);
+            }
         }
     });
 
@@ -63,7 +68,7 @@ $(document).ready(function () {
         var pageHeight = $(window).height();
 
         var snapThresholdX = pageWidth / 5;
-        var snapThresholdY = pageWidth / 4;
+        var snapThresholdY = pageHeight / 4;
 
         if (swipeDirection === "horizontal" && Math.abs(diffX) > snapThresholdX) {
             if (diffX > 0) {
@@ -72,9 +77,14 @@ $(document).ready(function () {
                 currentTranslateX = Math.max(currentTranslateX - pageWidth, -pageWidth); // Swipe left, limit to -1 screen
             }
             currentTranslateY = 0; // Reset Y to prevent diagonal movement
-        } else if (swipeDirection === "vertical" && Math.abs(diffY) > snapThresholdY && diffY < 0) {
-            // Allow only upward swipes
-            currentTranslateY = Math.max(currentTranslateY - pageHeight, -pageHeight); // Swipe up, limit to -1 screen
+        } else if (swipeDirection === "vertical" && Math.abs(diffY) > snapThresholdY) {
+            if (diffY < 0) {
+                // Upward swipe
+                currentTranslateY = Math.max(currentTranslateY - pageHeight, -pageHeight); // Limit to -1 screen
+            } else if (currentTranslateY < 0) {
+                // Downward swipe only if currently above original position
+                currentTranslateY = Math.min(currentTranslateY + pageHeight, 0); // Limit to 0
+            }
             currentTranslateX = 0; // Reset X to prevent diagonal movement
         }
 
