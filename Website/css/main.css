@@ -45,8 +45,8 @@ content{
   position:absolute;
 }
 #left{
- left:-100%;
- justify-content: center;
+  left:-100%;
+  justify-content: center;
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -56,10 +56,8 @@ content{
   right: -100%;
   overflow-y: auto;
   display: grid;
-  flex-direction: column;
   top: 0;
   box-sizing: border-box;
-  padding-top: 4rem;
 }
 #right .card{
   height: 222px;
