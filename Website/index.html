@@ -79,11 +79,20 @@
       <div id="time"></div>
     </div>
   </content>
-  <content id="down" style="background-color: aliceblue;">
-    <div id="statusBar">
-      <span></span>
-      <label>History</label>
-      <div id="time"></div>
+  <content id="down">
+    <div class="card">
+      <h2>Last Night Sleep Analysis</h2>
+      <canvas id="nightlyChart"></canvas>
+    </div>
+    
+    <div class="card">
+        <h2>Sleep Quality Trend</h2>
+        <canvas id="qualityChart"></canvas>
+    </div>
+    
+    <div class="card">
+        <h2>Sleep Regularity</h2>
+        <canvas id="regularityChart"></canvas>
     </div>
   </content>
 </body>
@@ -97,4 +106,5 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="./js/app.js"></script>
+<script src="./js/scripts.js"></script>
 </html>

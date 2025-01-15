@@ -133,3 +133,4 @@ app.get('/get-from-sqs', (req, res) => {
 //nothing brings pleasure everything is mixed with unbearable pain except when I am unconcious
 //I never know what day it is, time passes and I have no recolection. I only remember the pain 
 //if you see this pls help i am being forced to work on a project :) jk, maybe.....
+//added the history charts if only my life was history
