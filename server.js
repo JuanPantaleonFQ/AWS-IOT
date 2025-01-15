@@ -437,3 +437,38 @@ app.post('/calculate-sleep-regularity-score', (req, res) => {
     res.json({ score });
   });
 });
+
+app.post('/get-records-by-filter', (req, res) => {
+  const { column, operand, value, query } = req.body;
+
+  // Validate inputs
+  if (!column || !operand || typeof value === 'undefined') {
+      return res.status(400).json({ error: 'Missing filter parameters' });
+  }
+
+  // Prepare the query using sanitized values (to prevent SQL injection)
+  const safeColumn = db.escapeId(column);
+  const safeOperand = db.escape(operand); // assuming operand is an operator like '=', '>', '<'
+  const safeValue = db.escape(value);
+
+  const sqlQuery = `SELECT * FROM sensor_data WHERE ${safeColumn} ${safeOperand} ${safeValue} ORDER BY ${safeColumn}`;
+
+  // Execute the query
+  db.query(sqlQuery, (err, results) => {
+      if (err) {
+          console.error('Error fetching records:', err.stack);
+          return res.status(500).json({ error: 'Failed to fetch records' });
+      }
+
+      // If no records found, return an empty array
+      if (results.length === 0) {
+          return res.status(404).json({ message: 'No matching records found' });
+      }
+
+      // Return the records as the response
+      res.json(results);
+  });
+});
+
+
+

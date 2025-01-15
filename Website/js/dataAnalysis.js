@@ -90,9 +90,9 @@ async function getRecoredsByFilter() {
         column = $("#column").val();
         operand = $("#symbol").val();
         value = $("#value").val();
-        
+
         if (!column || !operand || typeof value === 'undefined') {
-            throw new Error('Invalid parameters provided');
+            return sleepRecords = await getLastSleepRecords(x);
         }
 
         // Construct a query string for demonstration (actual SQL query would be on server-side)
