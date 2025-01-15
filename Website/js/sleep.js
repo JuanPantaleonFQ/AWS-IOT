@@ -5,7 +5,7 @@ $.get('/check-sleep-status', function (data) {
     $('#sleepButton').text(data.buttonText).attr('data-sleepId', data.sleepId);
     sleeping = data.buttonText == "Stop sleeping";
 }).fail(function () {
-    console.error('Failed to fetch sleep status.');
+    console.log('Failed to fetch sleep status.');
 });
 
 $(document).ready(function () {
@@ -25,7 +25,7 @@ $(document).ready(function () {
                     $('#sleepButton').text('Stop sleeping');  // Change button text to "Stop Sleeping"
                 },
                 error: function(err) {
-                    console.error('Failed to start sleeping:', err);
+                    console.log('Failed to start sleeping:', err);
                 }
             });
 
@@ -57,7 +57,7 @@ $(document).ready(function () {
                 $('#iconContainer').addClass('hidden');  // Hide icons after stopping the session
             },
             error: function(err) {
-                console.error('Failed to stop sleeping:', err);
+                console.log('Failed to stop sleeping:', err);
             }
         });
 

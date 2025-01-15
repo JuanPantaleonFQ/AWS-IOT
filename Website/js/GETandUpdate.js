@@ -15,10 +15,10 @@ async function fetchDataFromSQS() {
 
         
       } else {
-        console.error('Failed to fetch data:', data.error);
+        console.log('Failed to fetch data:', data.error);
       }
     } catch (err) {
-      console.error('Error fetching data:', err);
+      console.log('Error fetching data:', err);
     }
   }
 

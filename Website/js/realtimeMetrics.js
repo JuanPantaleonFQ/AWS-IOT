@@ -138,7 +138,7 @@ function getRealTimeMetrics(datetime, period) {
       }
     },
     error: function(error) {
-      console.error('Error fetching metrics:', error);
+      console.log('Error fetching metrics:', error);
       alert('Failed to fetch metrics. Please try again.');
     }
   });
