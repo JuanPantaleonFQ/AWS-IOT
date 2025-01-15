@@ -62,7 +62,7 @@ content{
   padding-top: 4rem;
 }
 #right .card{
-  min-height: 222px;
+  height: 222px;
 }
 #down{
  bottom:-100%;
