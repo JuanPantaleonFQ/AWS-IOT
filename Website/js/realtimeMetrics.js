@@ -110,6 +110,7 @@ function createChart() {
 
 setInterval(function() {
   getRealTimeMetrics("now", 5, function(data) {
+    console.log(data);
     // Extract the relevant data from the response
     const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
     const newTemperature = data.averageTemperature;
