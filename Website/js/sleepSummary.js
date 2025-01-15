@@ -4,7 +4,6 @@ let charts = {};
 // Create nightly analysis chart
 function createNightlyChart() {
     const ctx = document.getElementById('nightlyChart');
-    const data = generateNightlyData();
     
     if (charts.nightly) {
         charts.nightly.destroy();
@@ -109,7 +108,6 @@ function createNightlyChart() {
 // Create quality trend chart
 function createQualityChart() {
     const ctx = document.getElementById('qualityChart');
-    const data = generateHistoricalData(30);
     
     if (charts.quality) {
         charts.quality.destroy();
@@ -154,7 +152,6 @@ function createQualityChart() {
 // Create regularity chart
 function createRegularityChart() {
     const ctx = document.getElementById('regularityChart');
-    const data = generateHistoricalData(30);
     
     if (charts.regularity) {
         charts.regularity.destroy();
