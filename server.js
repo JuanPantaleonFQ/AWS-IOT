@@ -229,10 +229,10 @@ app.post('/get-realtime-metrics', (req, res) => {
   }
 
   // Convert the datetime string to a Date object
-  const startDatetime = new Date(datetime);
+  const startDatetime = new Date(datetime.getTime() - period * 60 * 1000);
   
   // Calculate the end datetime based on the period (period in minutes)
-  const endDatetime = new Date(startDatetime.getTime() + period * 60 * 1000); // period in minutes
+  const endDatetime = new Date(startDatetime); // period in minutes
   
   // Query to get data from the sensor_data table between startDatetime and endDatetime
   const query = `
