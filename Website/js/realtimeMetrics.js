@@ -108,6 +108,30 @@ function createChart() {
   });
 }
 
+// Initialize
+createChart();
+
+// Function to call backend and get real-time metrics
+function getRealTimeMetrics(datetime, period, callback) {
+  if(datetime == "now")datetime = new Date().toISOString().slice(0, 16);
+  $.ajax({
+    url: '/get-realtime-metrics',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      datetime: datetime,
+      period: period
+    }),
+    success: function(response) {
+      console.log(response);
+      callback(null, response);  // Call the callback with the response data
+    },
+    error: function(error) {
+      callback(error, null);  // Call the callback with the error
+    }
+  });
+}
+
 setInterval(function () {
   getRealTimeMetrics("now", 5, function (error, response) {
     if (error) {
