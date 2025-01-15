@@ -233,6 +233,7 @@ async function populateGraphWithAverage(x) {
     try {
       // Use a promise-based approach to fetch sleep records
       const sleepRecords = await getLastSleepRecords(x);
+      console.log(sleepRecords);
   
       if (!sleepRecords || sleepRecords.length === 0) {
         console.error('No sleep records found');

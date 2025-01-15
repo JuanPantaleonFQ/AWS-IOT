@@ -296,7 +296,7 @@ app.post('/get-last-sleep-records', (req, res) => {
     return res.status(400).send({ error: 'Invalid number of records requested' });
   }
 
-  const query = 'SELECT * FROM SleepRecords ORDER BY start_date DESC LIMIT ?';
+  const query = 'SELECT * FROM SleepRecords ORDER BY id DESC LIMIT ?';
 
   // Using 'limit' as the limit for the number of records
   db.query(query, [parseInt(limit)], (err, results) => {
