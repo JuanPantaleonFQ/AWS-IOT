@@ -237,7 +237,7 @@ async function getLastSleepRecords(x) {
 async function populateGraphWithAverage(graph, x, dynamic) {
     try {
         if(dynamic){
-            $("#right").children().not("#id, #status").remove();
+            $("#right").children().not("#statusBar").remove();
             var sleepRecords = await getRecoredsByFilter() 
         }
         else{
