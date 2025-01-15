@@ -338,7 +338,6 @@ async function populateSleepConcistency(nDays) {
             console.log(response);
             // Push the new score to the chart's data
             charts.regularity.data.datasets[0].data.push(response.score);
-            charts.regularity.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());
         } catch (error) {
             console.error('Error calculating score:', error);
             alert('An error occurred while calculating the score. Please try again.');
