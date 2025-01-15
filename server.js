@@ -315,20 +315,6 @@ app.post('/get-last-sleep-records', (req, res) => {
 });
 
 app.post('/calculate-sleeping-score', (req, res) => {
-  const { start_date, end_date, score, w1, w2, w3 } = req.body;
-
-  // Validate input
-  if (!start_date || !end_date || !score || !w1 || !w2 || !w3) {
-    return res.status(400).json({ error: 'Missing required parameters' });
-  }
-
-  // Query to fetch data between start_date and end_date
-  const query = `
-    SELECT * FROM sensor_data
-    WHERE timestamp BETWEEN ? AND ?
-  `;
-
-  app.post('/calculate-sleeping-score', (req, res) => {
     const { start_date, end_date, score, w1, w2, w3 } = req.body;
   
     // Validate input
@@ -399,7 +385,7 @@ app.post('/calculate-sleeping-score', (req, res) => {
       // Send response with the calculated total score
       res.json({ totalScore });
     });
-  });
+});
   
 
 
