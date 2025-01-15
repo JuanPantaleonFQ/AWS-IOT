@@ -439,16 +439,28 @@ app.post('/calculate-sleep-regularity-score', (req, res) => {
 });
 
 app.post('/get-records-by-filter', (req, res) => {
-  const { column, operand, value} = req.body;
+  const { column, operand, value } = req.body;
 
   // Validate inputs
   if (!column || !operand || typeof value === 'undefined') {
       return res.status(400).json({ error: 'Missing filter parameters' });
   }
 
-  // Prepare the query using sanitized values (to prevent SQL injection)
+  // Parse the value and check if it is a valid number
+  const parsedValue = parseFloat(value);
+  if (isNaN(parsedValue)) {
+      return res.status(400).json({ error: 'Value must be a valid number' });
+  }
+
+  // Validate that operand is one of the allowed operators
+  const allowedOperands = ['=', '>', '<', '>=', '<=', '<>', 'LIKE'];
+  if (!allowedOperands.includes(operand)) {
+      return res.status(400).json({ error: 'Invalid operand' });
+  }
+
+  // Prepare the query using sanitized column
   const safeColumn = db.escapeId(column);
-  const safeValue = db.escape(value);
+  const safeValue = db.escape(parsedValue);  // Escape the parsed value to prevent injection
 
   const sqlQuery = `SELECT * FROM sensor_data WHERE ${safeColumn} ${operand} ${safeValue} ORDER BY ${safeColumn}`;
   console.log(sqlQuery);
@@ -469,6 +481,7 @@ app.post('/get-records-by-filter', (req, res) => {
       res.json(results);
   });
 });
+
 
 
 
