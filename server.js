@@ -412,11 +412,13 @@ app.post('/calculate-sleep-regularity-score', (req, res) => {
       return res.status(500).json({ error: 'Failed to fetch the previous sleep record' });
     }
 
+    // If no previous sleep session is found, return a score of 100
     if (results.length === 0) {
-      return res.status(400).json({ error: 'No previous sleep session found' });
+      console.log('No previous sleep session found, returning score of 100');
+      return res.json({ score: 100 });
     }
 
-    // Get the previous sleep session's start and stop times
+    // If a previous sleep session is found, use its start and stop times
     const lastSleepStartTime = new Date(results[0].start_date);
     const lastSleepStopTime = new Date(results[0].end_date);
 
@@ -438,3 +440,4 @@ app.post('/calculate-sleep-regularity-score', (req, res) => {
     res.json({ score });
   });
 });
+
