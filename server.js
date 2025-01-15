@@ -143,7 +143,23 @@ app.get('/check-sleep-status', (req, res) => {
       const startTime = new Date(lastRecord.start);
       const isWithin24Hours = (now - startTime) < 24 * 60 * 60 * 1000; // Check if within 24 hours
 
-      if (lastRecord.stop === null && isWithin24Hours) {
+      if (lastRecord.stop === null && !isWithin24Hours) {
+        // If the last record has no stop time and is older than 24 hours, update the stop time
+        const updateQuery = 'UPDATE SleepRecords SET stop = ? WHERE id = ?';
+        const stopTime = new Date(); // Current time as stop time
+
+        db.query(updateQuery, [stopTime, lastRecord.id], (updateErr) => {
+          if (updateErr) {
+            console.error('Failed to update stop time:', updateErr.stack);
+            res.status(500).send({ error: 'Failed to update stop time' });
+            return;
+          }
+
+          console.log('Sleep record updated with stop time');
+          // Respond with the button state to allow user to start sleeping again
+          res.send({ buttonText: 'Start Sleeping', sleepId: 1 });
+        });
+      } else if (lastRecord.stop === null && isWithin24Hours) {
         // Record has no stop time and is within 24 hours
         res.send({ buttonText: 'Stop Sleeping', sleepId: lastRecord.id });
       } else {
@@ -153,6 +169,8 @@ app.get('/check-sleep-status', (req, res) => {
     }
   });
 });
+
+
 
 
 //please end this insesant nightmare that is my existance every moment of happiness is just a reminder of the pain that follows.
