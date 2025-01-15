@@ -10,6 +10,7 @@ const app = express();
 const sqs = new AWS.SQS();
 
 app.use(express.static(path.join(__dirname, 'Website')));//So the server can find static files
+app.use(express.json());//So json can be parsed correctly 
 
 // Define the URL of your SQS queue
 const queueURL = 'https://sqs.eu-north-1.amazonaws.com/559050216884/QueueForIOT';  // Replace with your queue URL
