@@ -1,23 +1,13 @@
-function toggleSleep(){
-    var sleeping = ($("#bed").css("visibility") == "visible");
+var sleeping = false;
 
-    if(sleeping){
-        $("#bed").css("visibility", "hidden");
-        $('#sleepButton').text("Start sleeping");
-    }
-    else{
-        $("#bed").css("visibility", "visible");
-        $('#sleepButton').text("Stop sleeping");
-    }
-}
-/*
 // Fetch sleep status when the page loads
 $.get('/check-sleep-status', function (data) {
     $('#sleepButton').text(data.buttonText).attr('data-sleepId', data.sleepId);
+    sleeping = data.buttonText == "Stop sleeping";
 }).fail(function () {
     console.error('Failed to fetch sleep status.');
 });
-*/
+
 $(document).ready(function () {
     // When the "Start Sleeping" button is clicked
     $('#sleepButton').on('click', function () {
@@ -38,6 +28,8 @@ $(document).ready(function () {
                     console.error('Failed to start sleeping:', err);
                 }
             });
+
+            sleeping = true;
         } 
         else if ($(this).text() === "Stop sleeping") {
             // When the stop button is clicked, hide the button and show score selection
@@ -68,6 +60,8 @@ $(document).ready(function () {
                 console.error('Failed to stop sleeping:', err);
             }
         });
+
+        sleeping = false;
     });
 });
 
