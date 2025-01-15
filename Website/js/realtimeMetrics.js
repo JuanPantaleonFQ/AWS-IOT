@@ -1,3 +1,5 @@
+$(document).ready(function () {
+
 var datetime = "now";
 var period = 5;
 
@@ -105,8 +107,6 @@ function createChart() {
     options: options
   });
 }
-// Initialize
-createChart();
 
 setInterval(function() {
   getRealTimeMetrics("now", 5, function(data) {
@@ -128,3 +128,5 @@ setInterval(function() {
     metricsChart.update();
   });
 }, period * 60 * 1000);
+
+});
