@@ -284,7 +284,7 @@ function updateQualityGraph(datetime, metrics) {
     charts.nightly.update();
 }
 
-async function populateGraphWithScore(nDays){
+async function opulateGraphWithScore(nDays){
     const sleepRecords = await getLastSleepRecords(nDays);
 
     for(var i = 0; i < sleepRecords.length; i++){
@@ -318,5 +318,6 @@ $(document).ready(function () {
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
     populateGraphWithAverage(1);
+    opulateGraphWithScore(15);
   }
 }); 
