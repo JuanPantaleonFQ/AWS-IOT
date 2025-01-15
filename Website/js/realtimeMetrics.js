@@ -135,3 +135,5 @@ setInterval(function () {
     metricsChart.update();
   });
 }, period * 60 * 1000);
+
+});
