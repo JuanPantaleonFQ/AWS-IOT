@@ -314,7 +314,6 @@ app.post('/get-last-sleep-records', (req, res) => {
   });
 });
 
-// Add the new POST route for calculating the score
 app.post('/calculate-sleeping-score', (req, res) => {
   const { start_date, end_date, score, w1, w2, w3 } = req.body;
 
@@ -329,30 +328,80 @@ app.post('/calculate-sleeping-score', (req, res) => {
     WHERE timestamp BETWEEN ? AND ?
   `;
 
-  db.query(query, [start_date, end_date], (err, rows) => {
-    if (err) {
-      console.error('Error fetching data:', err);
-      return res.status(500).json({ error: 'Failed to fetch data from the database' });
+  app.post('/calculate-sleeping-score', (req, res) => {
+    const { start_date, end_date, score, w1, w2, w3 } = req.body;
+  
+    // Validate input
+    if (!start_date || !end_date || !score || !w1 || !w2 || !w3) {
+      return res.status(400).json({ error: 'Missing required parameters' });
     }
-
-    let totalSleepTime = 0;
-    let totalMovementIntervals = 0;
-
-    // Process data
-    rows.forEach(row => {
-      totalSleepTime += row.temperature; // Assume that sleep time corresponds to temperature field
-      if (row.motion > 6) {
-        totalMovementIntervals += 1;  // Count the intervals with motion greater than 6
+  
+    // Calculate the total sleep time in hours from the provided start and end dates
+    const startTime = new Date(start_date);
+    const endTime = new Date(end_date);
+    const totalSleepTime = (endTime - startTime) / (1000 * 60 * 60); // Convert milliseconds to hours
+  
+    // Query to fetch data between start_date and end_date
+    const query = `
+      SELECT * FROM sensor_data
+      WHERE timestamp BETWEEN ? AND ?
+    `;
+  
+    db.query(query, [start_date, end_date], (err, rows) => {
+      if (err) {
+        console.error('Error fetching data:', err);
+        return res.status(500).json({ error: 'Failed to fetch data from the database' });
       }
+  
+      let totalMovementIntervals = 0;
+      let intervalStart = null;
+      let motionCount = 0;
+  
+      // Process data
+      rows.forEach(row => {
+        // Filter rows with motion values of 0 or 1
+        if (row.motion === 1 || row.motion === 0) {
+          // Group by 30-minute intervals based on timestamp
+          let currentInterval = Math.floor(new Date(row.timestamp).getTime() / (30 * 60 * 1000));
+  
+          // Initialize intervalStart for the first iteration
+          if (intervalStart === null) {
+            intervalStart = currentInterval;
+          }
+  
+          // If the interval has changed (new 30-minute window)
+          if (currentInterval !== intervalStart) {
+            if (motionCount > 6) {
+              totalMovementIntervals += 1;  // Count the previous interval if motion > 6
+            }
+  
+            // Reset motion count for the new interval
+            motionCount = 0;
+            intervalStart = currentInterval;  // Update to the new interval
+          }
+  
+          // Increment motion count if there's motion detected
+          if (row.motion > 0) {
+            motionCount += 1;
+          }
+        }
+      });
+  
+      // Final check for the last interval in case the loop ends before an interval is counted
+      if (motionCount > 6) {
+        totalMovementIntervals += 1;
+      }
+      const movementPenalty = (totalMovementIntervals / 2) * 100 / totalSleepTime;
+
+      // Calculate the total score using the provided formula
+      const totalScore = (totalSleepTime / 8) * w1 + (100 - movementPenalty * w2) + score * w3;
+  
+      // Send response with the calculated total score
+      res.json({ totalScore });
     });
-
-    // Calculate the total score using the provided formula
-    const totalScore = 100 * ((totalSleepTime / 8) * w1 + (100 - totalMovementIntervals * w2) + score * w3);
-
-    // Send response with the calculated total score
-    res.json({ totalScore });
   });
-});
+  
+
 
 
 
