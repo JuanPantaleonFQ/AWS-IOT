@@ -166,7 +166,7 @@ function createRegularityChart() {
     charts.regularity = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.map(d => d.date.toLocaleDateString()),
+            labels: data.consitency,
             datasets: [{
                 label: 'Sleep Regularity',
                 data: data.map(d => d.regularity),
@@ -340,8 +340,8 @@ async function populateSleepConcistency(nDays) {
             });
             console.log(response);
             // Push the new score to the chart's data
-            charts.quality.data.datasets[0].data.push(response.score);
-            charts.quality.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());
+            charts.regularity.data.datasets[0].data.push(response.score);
+            charts.regularity.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());
         } catch (error) {
             console.error('Error calculating score:', error);
             alert('An error occurred while calculating the score. Please try again.');
@@ -349,7 +349,7 @@ async function populateSleepConcistency(nDays) {
     }
 
     // After the loop finishes, update the chart
-    charts.quality.update();
+    charts.regularity.update();
 }
 
 $(document).ready(function () {   
