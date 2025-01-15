@@ -85,9 +85,12 @@ async function createChartForSleepAnalysis(n, date) {
     return charts[n];
 }
 
-async function getRecoredsByFilter(column, operand, value) {
+async function getRecoredsByFilter() {
     try {
-        // Validate inputs to prevent SQL injection-like issues
+        column = $("#column").val();
+        operand = $("#symbol").val();
+        value = $("#value").val();
+        
         if (!column || !operand || typeof value === 'undefined') {
             throw new Error('Invalid parameters provided');
         }
