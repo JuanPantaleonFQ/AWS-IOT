@@ -50,6 +50,8 @@ content{
     align-items: center;
     display: flex;
     flex-direction: column;
+    
+    padding-top: 4rem;
 }
 #right{
   right: -100%;
