@@ -189,20 +189,39 @@ app.post('/start-sleeping', (req, res) => {
 
 
 app.post('/stop-sleeping', (req, res) => {
-  const { recordId, score, stopTime } = req.body;  // Stop time passed from frontend
+  const { score, stopTime } = req.body;  // Stop time and score passed from frontend
 
-  const query = 'UPDATE SleepRecords SET end_date = ?, score = ? WHERE id = ?';
+  // Query to get the most recent active sleep record (not stopped)
+  const getLastActiveRecordQuery = 'SELECT id FROM SleepRecords WHERE end_date IS NULL ORDER BY start_date DESC LIMIT 1';
 
-  db.query(query, [new Date(stopTime), score, recordId], (err) => {
+  db.query(getLastActiveRecordQuery, (err, result) => {
     if (err) {
-      console.error('Failed to update sleep record:', err.stack);
-      return res.status(500).send({ error: 'Failed to stop sleep' });
+      console.error('Failed to fetch the last active sleep record:', err.stack);
+      return res.status(500).send({ error: 'Failed to fetch the last active sleep record' });
     }
 
-    console.log('Sleep record updated with stop time and score');
-    res.status(200).json({ success: true });
+    if (result.length === 0) {
+      // If no active sleep record is found
+      return res.status(400).send({ error: 'No active sleep session found' });
+    }
+
+    const recordId = result[0].id;  // Get the ID of the most recent active sleep record
+
+    // Update the sleep record with the stop time and score
+    const updateQuery = 'UPDATE SleepRecords SET end_date = ?, score = ? WHERE id = ?';
+
+    db.query(updateQuery, [new Date(stopTime), score, recordId], (err) => {
+      if (err) {
+        console.error('Failed to update sleep record:', err.stack);
+        return res.status(500).send({ error: 'Failed to stop sleep' });
+      }
+
+      console.log('Sleep record updated with stop time and score');
+      res.status(200).json({ success: true });
+    });
   });
 });
+
 
 
 
