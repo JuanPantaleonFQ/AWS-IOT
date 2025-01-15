@@ -314,6 +314,45 @@ app.post('/get-last-sleep-records', (req, res) => {
   });
 });
 
+// Add the new POST route for calculating the score
+app.post('/calculate-sleeping-score', (req, res) => {
+  const { start_date, end_date, score, w1, w2, w3 } = req.body;
+
+  // Validate input
+  if (!start_date || !end_date || !score || !w1 || !w2 || !w3) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+
+  // Query to fetch data between start_date and end_date
+  const query = `
+    SELECT * FROM sensor_data
+    WHERE timestamp BETWEEN ? AND ?
+  `;
+
+  db.query(query, [start_date, end_date], (err, rows) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      return res.status(500).json({ error: 'Failed to fetch data from the database' });
+    }
+
+    let totalSleepTime = 0;
+    let totalMovementIntervals = 0;
+
+    // Process data
+    rows.forEach(row => {
+      totalSleepTime += row.temperature; // Assume that sleep time corresponds to temperature field
+      if (row.motion > 6) {
+        totalMovementIntervals += 1;  // Count the intervals with motion greater than 6
+      }
+    });
+
+    // Calculate the total score using the provided formula
+    const totalScore = 100 * ((totalSleepTime / 8) * w1 + (100 - totalMovementIntervals * w2) + score * w3);
+
+    // Send response with the calculated total score
+    res.json({ totalScore });
+  });
+});
 
 
 

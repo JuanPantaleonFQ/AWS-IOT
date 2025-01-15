@@ -2,6 +2,8 @@
 let charts = {};
 var evaluationPeriod = 60;
 
+var w1 = 0.3,w2 = 0.2, w3 = 0.5;
+
 // Create nightly analysis chart
 function createNightlyChart() {
     const ctx = document.getElementById('nightlyChart');
@@ -122,7 +124,7 @@ function createQualityChart() {
             labels: data.map(d => d.date.toLocaleDateString()),
             datasets: [{
                 label: 'Sleep Quality',
-                data: data.map(d => d.quality),
+                data: data.quality,
                 borderColor: '#60a5fa',
                 tension: 0.4,
                 fill: true,
@@ -254,7 +256,7 @@ async function populateGraphWithAverage(x) {
           const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
           
           // Update the graph with the received data
-          updateGraph(currentDatetime, data);
+          updateQualityGraph(currentDatetime, data);
   
           // Move to the next period (advance by evaluationPeriod minutes)
           currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
@@ -268,14 +270,11 @@ async function populateGraphWithAverage(x) {
     }
   }
   
-
-  function updateGraph(datetime, metrics) {
-
+function updateQualityGraph(datetime, metrics) {
     // Add the new data to the chart data arrays
     const hour = new Date(datetime).getHours();  // Extract the hour from datetime
     charts.nightly.data.labels.push(`${hour}:00`);
 
-    // Assuming metrics have these fields: temperature, humidity, light, totalMotion
     charts.nightly.data.datasets[0].data.push(metrics.totalMotion);  // Movements
     charts.nightly.data.datasets[1].data.push(metrics.averageHumidity);  // Humidity
     charts.nightly.data.datasets[2].data.push(metrics.averageLux);  // Light
@@ -283,6 +282,36 @@ async function populateGraphWithAverage(x) {
 
     // Update the chart
     charts.nightly.update();
+}
+
+async function populateGraphWithScore(nDays){
+    const sleepRecords = await getLastSleepRecords(nDays);
+
+    for(var i = 0; i < sleepRecords.length; i++){
+        sleepRecords[i]
+        const sleepDay = {
+            start_date: new Date(sleepRecords[i].start_date),
+            end_date: new Date(sleepRecords[i].end_date),
+            score: sleepRecords[i].score,
+            w1: w1,
+            w2: w2,
+            w3: w3
+          };
+        $.ajax({
+            url: '/calculate-sleeping-score', // Endpoint for score calculation
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(sleepDay),
+            success: function(response) {
+                console.log(response)
+                charts.quality.data.datasets[0].data.push(response.totalScore);
+            },
+            error: function(xhr, status, error) {
+              console.error('Error calculating score:', error);
+              alert('An error occurred while calculating the score. Please try again.');
+            }
+          });
+    }
 }
 
 $(document).ready(function () {   

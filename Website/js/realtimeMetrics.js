@@ -141,7 +141,7 @@ createChart();
 setInterval(async function() {
   try {
     // Fetch real-time metrics data, wait until it's resolved
-    var data = await getRealTimeMetrics("now", 5);
+    var data = await getRealTimeMetrics("now", 60);
     
     // Extract the relevant data from the response
     const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
@@ -160,6 +160,6 @@ setInterval(async function() {
     // Update the chart with the new data
     metricsChart.update();
   } catch (error) {
-    console.log('Error in setInterval:', error);
+    console.log('Error in setInterval');
   }
 }, period * 60 * 1000);
