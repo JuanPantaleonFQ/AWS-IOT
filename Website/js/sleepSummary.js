@@ -206,38 +206,32 @@ function initializeCharts() {
 // Initialize charts on load
 document.addEventListener('DOMContentLoaded', initializeCharts);
 
-
-// Function to fetch sleep records using $.ajax wrapped in a Promise
-function getLastSleepRecords(x, callback) {
-    $.ajax({
-      url: '/get-last-sleep-records',  // Adjusted endpoint
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({ limit: x }), // Send the number of records you want
-      success: function(data) {
-        if (data && Array.isArray(data)) {
-          callback(null, data);  // Call the callback with the data
-        } else {
-          alert('No sleep records found');
-          callback(null, null);  // Call with null if no data
+async function getLastSleepRecords(x) {
+    try {
+        const response = await $.ajax({
+            url: '/get-last-sleep-records',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ limit: x }), // Send the number of records you want
+        });
+        if (response && Array.isArray(response)) {
+            return response; 
+        } 
+        else {
+            throw new Error('No sleep records found');
         }
-      },
-      error: function(error) {
+    } 
+    catch (error) {
         console.error('Error fetching sleep records:', error);
-        callback(error, null);  // Call the callback with the error
-      }
-    });
-  }
+        throw error;  // Throw the error so it can be caught by the caller
+    }
+}
   
 
-  
-  // Function to populate the graph with average data
-function populateGraphWithAverage(x) {
-    getLastSleepRecords(x, function(error, sleepRecords) {
-      if (error) {
-        console.error('Error fetching sleep records:', error);
-        return;
-      }
+async function populateGraphWithAverage(x) {
+    try {
+      // Use a promise-based approach to fetch sleep records
+      const sleepRecords = await getLastSleepRecords(x);
   
       if (!sleepRecords || sleepRecords.length === 0) {
         console.error('No sleep records found');
@@ -254,24 +248,26 @@ function populateGraphWithAverage(x) {
   
       // Loop through each period and fetch the real-time metrics
       for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
-        // Call the getRealTimeMetrics function without async/await
-        getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod, function(metricsError, metrics) {
-          if (metricsError) {
-            console.error('Error fetching real-time metrics:', metricsError);
-            return;
-          }
-  
+        try {
+          // Await the real-time metrics for the current period
+          const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
+          
           // Update the graph with the received data
-          updateGraph(currentDatetime, metrics);
+          updateGraph(currentDatetime, data);
   
           // Move to the next period (advance by evaluationPeriod minutes)
           currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
-        });
+        } catch (error) {
+          console.error('Error fetching real-time metrics for period starting at ' + currentDatetime.toISOString(), error);
+        }
       }
   
       console.log('Graph populated with average metrics.');
-    });
-}
+    } catch (error) {
+      console.error('Error populating graph with average metrics:', error);
+    }
+  }
+  
   
   // Function to update the graph with new data
   function updateGraph(datetime, metrics) {
@@ -283,6 +279,6 @@ function populateGraphWithAverage(x) {
   
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
-    //populateGraphWithAverage(1);
+    populateGraphWithAverage(1);
   }
   
