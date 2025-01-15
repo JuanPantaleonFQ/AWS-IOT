@@ -1,5 +1,6 @@
 // Store chart instances globally
 let charts = {};
+var evaluationPeriod = 60;
 
 // Create nightly analysis chart
 function createNightlyChart() {
