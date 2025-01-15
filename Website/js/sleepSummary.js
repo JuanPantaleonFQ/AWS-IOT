@@ -249,6 +249,7 @@ async function populateGraphWithAverage(x) {
   
       // Loop through each period and fetch the real-time metrics
       for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
+        console.log(`${i} < ${periodInMinutes} + ` + evaluationPeriod)
         try {
           // Await the real-time metrics for the current period
           const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
