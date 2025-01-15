@@ -114,3 +114,7 @@ async function getRecoredsByFilter() {
     }
 }
 
+function search(){
+    populateGraphWithAverage(null, 10, true);
+}
+
