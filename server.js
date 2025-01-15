@@ -187,7 +187,6 @@ app.post('/start-sleeping', (req, res) => {
   });
 });
 
-
 app.post('/stop-sleeping', (req, res) => {
   const { score, stopTime } = req.body;  // Stop time and score passed from frontend
 
@@ -222,6 +221,69 @@ app.post('/stop-sleeping', (req, res) => {
   });
 });
 
+app.post('/get-realtime-metrics', (req, res) => {
+  const { datetime, period } = req.body;  // Datetime and period (in hours) from the frontend
+
+  if (!datetime || !period) {
+    return res.status(400).send({ error: 'Datetime and period are required' });
+  }
+
+  // Convert the datetime string to a Date object
+  const startDatetime = new Date(datetime);
+  
+  // Calculate the end datetime based on the period (period in hours)
+  const endDatetime = new Date(startDatetime.getTime() + period * 60 * 1000); // period in hours
+  
+  // Query to get data from the sensor_data table between startDatetime and endDatetime
+  const query = `
+    SELECT 
+      temperature,
+      humidity,
+      lux,
+      motion,
+      timestamp
+    FROM sensor_data
+    WHERE timestamp BETWEEN ? AND ?`;
+
+  db.query(query, [startDatetime, endDatetime], (err, results) => {
+    if (err) {
+      console.error('Failed to fetch real-time metrics:', err.stack);
+      return res.status(500).send({ error: 'Failed to fetch real-time metrics' });
+    }
+
+    // If no data was found in the given period
+    if (results.length === 0) {
+      return res.status(200).json({ message: 'No data available for the specified period' });
+    }
+
+    // Calculate average values and total motion
+    let totalTemperature = 0, totalHumidity = 0, totalLux = 0, motionCount = 0;
+
+    results.forEach(row => {
+      totalTemperature += row.temperature;
+      totalHumidity += row.humidity;
+      if (row.lux !== null) totalLux += row.lux; // Handle null lux values
+      if (row.motion === 1) motionCount++;  // Count motion events (assuming motion is 1 for detected)
+    });
+
+    // Calculate averages
+    const avgTemperature = totalTemperature / results.length;
+    const avgHumidity = totalHumidity / results.length;
+    const avgLux = totalLux / results.filter(row => row.lux !== null).length; // Only average non-null lux
+    const totalMotion = motionCount;
+
+    // Return aggregated results in a single JSON object
+    res.status(200).json({
+      datetime: datetime,
+      averageTemperature: avgTemperature,
+      averageHumidity: avgHumidity,
+      averageLux: avgLux,
+      totalMotion: totalMotion,
+      periodStart: startDatetime,
+      periodEnd: endDatetime
+    });
+  });
+});
 
 
 

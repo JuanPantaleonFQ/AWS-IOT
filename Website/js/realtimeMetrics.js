@@ -1,4 +1,31 @@
-// Chart
+var datetime = "now";
+var period = 60;
+
+function getRealTimeMetrics(datetime, period) {
+  if(datetime == "now")datetime = new Date().toISOString().slice(0, 16);
+  $.ajax({
+    url: '/get-realtime-metrics',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({ datetime: datetime, period: period }),
+    success: function(data) {
+      if (data.error || data.message) {
+        alert('Error: ' + (data.error || data.message));
+      } else {
+        console.log(data)
+      }
+    },
+    error: function(error) {
+      console.error('Error fetching metrics:', error);
+      alert('Failed to fetch metrics. Please try again.');
+    }
+  });
+}
+
+getRealTimeMetrics(datetime, period)
+
+
+
 const ctx = document.getElementById('metricsChart').getContext('2d');
 let metricsChart;
 
