@@ -386,18 +386,55 @@ app.post('/calculate-sleeping-score', (req, res) => {
       res.json({ totalScore });
     });
 });
-  
 
+app.post('/calculate-sleep-regularity-score', (req, res) => {
+  const { sleepId, currentSleepStart, currentSleepStop } = req.body;
 
+  // Validate inputs
+  if (!sleepId || !currentSleepStart || !currentSleepStop) {
+    return res.status(400).json({ error: 'Missing sleepId, start, or stop datetime' });
+  }
 
+  // Convert provided timestamps to Date objects
+  const currentSleepStartTime = new Date(currentSleepStart);
+  const currentSleepStopTime = new Date(currentSleepStop);
 
-//please end this insesant nightmare that is my existance every moment of happiness is just a reminder of the pain that follows.
-//I am glad there is nothing after death since any amount of conciounsness translates to unimaginable and horrifying amount of pain, if there is a hell this is it.
-//I want to eat my skin sometimes
-//I live in a constant fog of anxiety and pain, I can't see my hands
-// :) this is the face I make to delude myself of the reality I suffer. I  a m  s o  h a p p y :)
-// hihihi is how I laugh when I see myself suffering because I have no other emotion left :)
-//nothing brings pleasure everything is mixed with unbearable pain except when I am unconcious
-//I never know what day it is, time passes and I have no recolection. I only remember the pain 
-//if you see this pls help i am being forced to work on a project :) jk, maybe.....
-//added the history charts if only my life was history
+  // Query to fetch the previous sleep session from the database using the provided sleepId
+  const query = `
+    SELECT start_date, end_date
+    FROM SleepRecords
+    WHERE id = (SELECT MAX(id) FROM SleepRecords WHERE id < ?)
+  `;
+
+  db.query(query, [sleepId], (err, results) => {
+    if (err) {
+      console.error('Error fetching the previous sleep record:', err.stack);
+      return res.status(500).json({ error: 'Failed to fetch the previous sleep record' });
+    }
+
+    if (results.length === 0) {
+      return res.status(400).json({ error: 'No previous sleep session found' });
+    }
+
+    // Get the previous sleep session's start and stop times
+    const lastSleepStartTime = new Date(results[0].start_date);
+    const lastSleepStopTime = new Date(results[0].end_date);
+
+    // Calculate the time difference between the last stop and the current start time
+    const timeDifference = (currentSleepStartTime - lastSleepStopTime) / (1000 * 60 * 60); // in hours
+
+    let score = 0;
+
+    if (timeDifference >= 24) {
+      score = 0;
+    } else if (timeDifference === 16) {
+      score = 100;
+    } else if (timeDifference < 16) {
+      // Normalize score between 0 and 100 based on the difference from 16 hours
+      score = Math.max(0, 100 - Math.abs(16 - timeDifference) * 6.25);
+    }
+
+    // Send the calculated score as a response
+    res.json({ score });
+  });
+});

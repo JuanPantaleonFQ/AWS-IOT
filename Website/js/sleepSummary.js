@@ -155,48 +155,50 @@ function createQualityChart() {
 }
 
 // Create regularity chart
-function createRegularityChart() {
+function createRegularityChart(data) {
     const ctx = document.getElementById('regularityChart');
-    const data = [];
-    
-    if (charts.regularity) {
-        charts.regularity.destroy();
-    }
 
-    charts.regularity = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: data.map(d => d.date.toLocaleDateString()),
-            datasets: [{
-                label: 'Sleep Regularity',
-                data: data.map(d => d.regularity),
-                borderColor: '#34d399',
-                tension: 0.4,
-                fill: true,
-                backgroundColor: 'rgba(52, 211, 153, 0.1)'
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    grid: { color: '#334155' },
-                    ticks: { color: '#94a3b8' }
-                },
-                x: {
-                    grid: { color: '#334155' },
-                    ticks: { color: '#94a3b8' }
-                }
+    // If the chart already exists, update it instead of creating a new one
+    if (charts.regularity) {
+        // Add the new data to the chart
+        charts.regularity.data.datasets[0].data = data.map(d => d.regularity); // Update data
+        charts.regularity.update(); // Update chart
+    } else {
+        // Create a new chart if it doesn't exist
+        charts.regularity = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Sleep Regularity',
+                    data: data.map(d => d.regularity), // Use the calculated regularity scores
+                    borderColor: '#34d399',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(52, 211, 153, 0.1)',
+                }]
             },
-            plugins: {
-                legend: {
-                    labels: { color: '#94a3b8' }
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: '#334155' },
+                        ticks: { color: '#94a3b8' },
+                    },
+                    x: {
+                        grid: { color: '#334155' },
+                        ticks: { display: false }, // Hide ticks on the x-axis
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8' },
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 }
 
 // Initialize all charts
@@ -319,11 +321,45 @@ async function populateGraphWithScore(nDays){
     charts.quality.update();
 }
 
+async function populateSleepConcistency(nDays) {
+    const sleepRecords = await getLastSleepRecords(nDays);
+
+    for (let i = 0; i < sleepRecords.length; i++) {
+        const sleepDay = {
+            start_date: new Date(sleepRecords[i].start_date),
+            end_date: new Date(sleepRecords[i].end_date),
+            score: sleepRecords[i].score,
+            w1: w1,
+            w2: w2,
+            w3: w3
+        };
+        
+        try {
+            // Using await to ensure that each AJAX call is completed before moving on
+            const response = await $.ajax({
+                url: '/calculate-sleeping-score',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(sleepDay)
+            });
+            // Push the new score to the chart's data
+            charts.quality.data.datasets[0].data.push(response.totalScore);
+            charts.quality.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());  // Update labels too
+        } catch (error) {
+            console.error('Error calculating score:', error);
+            alert('An error occurred while calculating the score. Please try again.');
+        }
+    }
+
+    // After the loop finishes, update the chart
+    charts.quality.update();
+}
 
 $(document).ready(function () {   
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
     populateGraphWithAverage(1);
     populateGraphWithScore(15);
+    populateSleepConcistency(15);
   }
 }); 
