@@ -142,13 +142,24 @@ async function getRealTimeMetrics(datetime, period) {
 setInterval(async function () {
   try {
     const metrics = await getRealTimeMetrics("now", period);
-    console.log("Metrics received:", metrics);
+    
 
-    if (metrics.averageTemperature !== undefined) {
-      console.log("Average Temperature:", metrics.averageTemperature);
-    } else {
-      console.error("averageTemperature is not defined in the response.");
-    }
+    // Extract the relevant data from the response
+    const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
+    const newTemperature = metrics.averageTemperature;
+    const newHumidity = metrics.averageHumidity;
+    const newLux = metrics.averageLux;
+    const newMotion = metrics.totalMotion;
+
+    // Add new data point to the chart
+    chartData.labels.push(newLabel); // Add time label
+    chartData.datasets[0].data.push(newTemperature); // Add temperature
+    chartData.datasets[1].data.push(newHumidity); // Add humidity
+    chartData.datasets[2].data.push(newLux); // Add light (lux)
+    chartData.datasets[3].data.push(newMotion); // Add movement
+
+    // Update the chart with the new data
+    metricsChart.update();
   } catch (error) {
     console.error("Error fetching metrics:", error);
   }
