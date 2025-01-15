@@ -108,26 +108,30 @@ function createChart() {
   });
 }
 
-setInterval(function() {
-  getRealTimeMetrics("now", 5, function(data) {
-    console.log(data);
+setInterval(function () {
+  getRealTimeMetrics("now", 5, function (error, response) {
+    if (error) {
+      console.error("Error fetching metrics:", error); // Log the error
+      return; // Exit early if there's an error
+    }
+
+    console.log("Metrics received:", response);
+
     // Extract the relevant data from the response
     const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
-    const newTemperature = data.averageTemperature;
-    const newHumidity = data.averageHumidity;
-    const newLux = data.averageLux;
-    const newMotion = data.totalMotion;
+    const newTemperature = response.averageTemperature;
+    const newHumidity = response.averageHumidity;
+    const newLux = response.averageLux;
+    const newMotion = response.totalMotion;
 
     // Add new data point to the chart
-    chartData.labels.push(newLabel);  // Add time label
-    chartData.datasets[0].data.push(newTemperature);  // Add temperature
-    chartData.datasets[1].data.push(newHumidity);  // Add humidity
-    chartData.datasets[2].data.push(newLux);  // Add light (lux)
-    chartData.datasets[3].data.push(newMotion);  // Add movement
+    chartData.labels.push(newLabel); // Add time label
+    chartData.datasets[0].data.push(newTemperature); // Add temperature
+    chartData.datasets[1].data.push(newHumidity); // Add humidity
+    chartData.datasets[2].data.push(newLux); // Add light (lux)
+    chartData.datasets[3].data.push(newMotion); // Add movement
 
     // Update the chart with the new data
     metricsChart.update();
   });
 }, period * 60 * 1000);
-
-});
