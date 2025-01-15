@@ -238,7 +238,7 @@ async function populateGraphWithAverage(graph, x, dynamic) {
     try {
         if(dynamic){
             $("#right").empty();
-           var sleepRecords = await getRecoredsByFilter(column, operand, value) 
+           var sleepRecords = await getRecoredsByFilter() 
         }
         else{
             var sleepRecords = await getLastSleepRecords(x);
