@@ -325,7 +325,7 @@ async function populateSleepConcistency(nDays) {
     console.log(sleepRecords);
     
     // Loop through each record to calculate the sleep regularity score
-    for (let i = 0; i < sleepRecords.length; i++) {
+    for (let i = sleepRecords.length - 1; i >= 0 ; i--) {
         const sleepDay = {
             sleepId: sleepRecords[i].id,
             currentSleepStart: new Date(sleepRecords[i].start_date),
