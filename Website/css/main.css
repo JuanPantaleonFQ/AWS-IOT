@@ -55,7 +55,7 @@ content{
 #right{
   right: -100%;
   overflow-y: auto;
-  display: flex;
+  display: grid;
   flex-direction: column;
   top: 0;
   box-sizing: border-box;
