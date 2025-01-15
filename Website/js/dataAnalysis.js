@@ -84,3 +84,7 @@ async function createChartForSleepAnalysis(n, date) {
 
     return charts[n];
 }
+
+async function getRecoredsByFilter(column, operand, value){
+    
+}

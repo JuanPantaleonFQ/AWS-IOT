@@ -120,23 +120,26 @@
 
   </content>
   <content id="right">
-    <div id="statusBar">
-      sort by 
-      <select name="" id="column">
-        <option value="temperature">Temperature</option>
-        <option value="humidity">Humidity</option>
-        <option value="movement">Movement</option>
-        <option value="lux">Lux</option>
-        <option value="timestamp">Date</option>
-      </select>
-      <select name="" id="symbol">
-        <option value="=">=<option>
-        <option value=">=">&lt;=</option>
-        <option value="<=">&lt;=</option>
-        <option value=">">&lt;</option>
-        <option value="<">&lt;</option>
-      </select><input type="text" name="" id="">
-      <div id="time"></div>
+    <div id="statusBar" style="display: flex; flex-direction: column; width: 100%;">
+      <div>
+        sort by 
+        <select name="" id="column">
+          <option value="temperature">Temperature</option>
+          <option value="humidity">Humidity</option>
+          <option value="movement">Movement</option>
+          <option value="lux">Lux</option>
+          <option value="timestamp" type="datetime">Date</option>
+        </select>
+        <select name="" id="symbol">
+          <option value="=">=<option>
+          <option value=">=">&lt;=</option>
+          <option value="<=">&lt;=</option>
+          <option value=">">&lt;</option>
+          <option value="<">&lt;</option>
+        </select><input type="text" name="" id="">
+        <div id="time"></div>
+      </div>
+      <button id="search"><i class="fas fa-search"></i> Search records</button>
     </div>
   </content>
   <content id="down">

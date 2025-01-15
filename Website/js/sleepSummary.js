@@ -236,8 +236,13 @@ async function getLastSleepRecords(x) {
 
 async function populateGraphWithAverage(graph, x, dynamic) {
     try {
-        // Use a promise-based approach to fetch sleep records
-        const sleepRecords = await getLastSleepRecords(x);
+        if(dynamic){
+            $("#right").empty();
+           var sleepRecords = await getRecoredsByFilter(column, operand, value) 
+        }
+        else{
+            var sleepRecords = await getLastSleepRecords(x);
+        }
 
         if (!sleepRecords || sleepRecords.length === 0) {
             console.error('No sleep records found');
