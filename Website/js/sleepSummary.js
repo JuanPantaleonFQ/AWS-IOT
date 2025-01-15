@@ -300,6 +300,6 @@ function populateGraphWithAverage(x) {
   
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
-    populateGraphWithAverage(1);
+    //populateGraphWithAverage(1);
   }
   
