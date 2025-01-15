@@ -284,11 +284,10 @@ function updateQualityGraph(datetime, metrics) {
     charts.nightly.update();
 }
 
-async function populateGraphWithScore(nDays){
+async function populateGraphWithScore(nDays){ 
     const sleepRecords = await getLastSleepRecords(nDays);
 
-    for(var i = 0; i < sleepRecords.length; i++){
-        sleepRecords[i]
+    for (let i = 0; i < sleepRecords.length; i++) {
         const sleepDay = {
             start_date: new Date(sleepRecords[i].start_date),
             end_date: new Date(sleepRecords[i].end_date),
@@ -297,24 +296,29 @@ async function populateGraphWithScore(nDays){
             w2: w2,
             w3: w3
         };
-        console.log(sleepDay)
-        $.ajax({
-            url: '/calculate-sleeping-score',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(sleepDay),
-            success: function(response) {
-                console.log(response)
-                charts.quality.data.datasets[0].data.push(response.totalScore);
-                charts.quality.update();
-            },
-            error: function(xhr, status, error) {
-              console.error('Error calculating score:', error);
-              alert('An error occurred while calculating the score. Please try again.');
-            }
-          });
+        
+        try {
+            // Using await to ensure that each AJAX call is completed before moving on
+            const response = await $.ajax({
+                url: '/calculate-sleeping-score',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(sleepDay)
+            });
+
+            console.log(response.totalScore);
+            charts.quality.data.datasets[0].data.push(response.totalScore);
+            charts.quality.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());  // Update labels too
+        } catch (error) {
+            console.error('Error calculating score:', error);
+            alert('An error occurred while calculating the score. Please try again.');
+        }
     }
+
+    // After the loop finishes, update the chart once
+    charts.quality.update();
 }
+
 
 $(document).ready(function () {   
   // Call the function to populate the graph with the most recent sleep data
