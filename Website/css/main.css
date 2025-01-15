@@ -11,9 +11,9 @@
 select{
   background: none;
 }
-input{
-  background: none;
-  border-bottom: solid 1px var(--background-color);
+input{    background: none;
+  border-bottom: solid 1px var(--text-color);
+  outline: none;
 }
 *{
   border:none;
