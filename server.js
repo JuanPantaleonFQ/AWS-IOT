@@ -450,7 +450,7 @@ app.post('/get-records-by-filter', (req, res) => {
   const safeColumn = db.escapeId(column);
   const safeValue = db.escape(value);
 
-  const sqlQuery = `SELECT * FROM sensor_data WHERE ${safeColumn} ${safeOperand} ${safeValue} ORDER BY ${safeColumn}`;
+  const sqlQuery = `SELECT * FROM sensor_data WHERE ${safeColumn} ${operand} ${safeValue} ORDER BY ${safeColumn}`;
   console.log(sqlQuery);
 
   // Execute the query
