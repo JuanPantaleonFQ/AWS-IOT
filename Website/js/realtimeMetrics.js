@@ -111,51 +111,50 @@ function createChart() {
 // Initialize
 createChart();
 
-function getRealTimeMetrics(datetime, period, callback) {
-  if (datetime === "now") datetime = new Date().toISOString().slice(0, 16);
-  $.ajax({
-    url: '/get-realtime-metrics',
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({
-      datetime: datetime,
-      period: period
-    }),
-    success: function(response) {
-      console.log("Response received:", response);
-      callback(null, response);
-    },
-    error: function(error) {
-      console.error("Error during AJAX request:", error);
-      callback(error, null);
+async function getRealTimeMetrics(datetime, period) {
+  if (datetime === "now") {
+    datetime = new Date().toISOString().slice(0, 16);
+  }
+
+  try {
+    const response = await $.ajax({
+      url: '/get-realtime-metrics',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        datetime: datetime,
+        period: period
+      }),
+    });
+    console.log("Response received:", response);
+
+    if (!response || typeof response !== "object") {
+      throw new Error("Invalid response received");
     }
-  });
+
+    return response; // Return the response
+  } catch (error) {
+    console.error("Error during AJAX request:", error);
+    throw error; // Propagate the error
+  }
 }
 
-setInterval(function () {
-  const period = 5; // Make sure `period` is defined
-  getRealTimeMetrics("now", 5, function (error, response) {
-    if (error) {
-      console.error("Error fetching metrics:", error);
-      return;
-    }
-  
-    console.log("Response received:", response);
-    console.log("Type of response:", typeof response); // Log the type
-    console.log("Response is null:", response === null); // Check if null
-    console.log("Response is undefined:", response === undefined); // Check if undefined
-  
-    if (!response) {
-      console.error("Response is null or undefined");
-      return;
-    }
-  
-    if (response.averageTemperature !== undefined) {
-      console.log("Average Temperature:", response.averageTemperature);
+// Example usage with setInterval
+const period = 5; // Period in minutes
+
+setInterval(async function () {
+  try {
+    const metrics = await getRealTimeMetrics("now", period);
+    console.log("Metrics received:", metrics);
+
+    if (metrics.averageTemperature !== undefined) {
+      console.log("Average Temperature:", metrics.averageTemperature);
     } else {
-      console.error("averageTemperature is not defined in the response");
+      console.error("averageTemperature is not defined in the response.");
     }
-  });
-  
-}, 5 * 60 * 1000);
+  } catch (error) {
+    console.error("Error fetching metrics:", error);
+  }
+}, period * 60 * 1000);
+
 
