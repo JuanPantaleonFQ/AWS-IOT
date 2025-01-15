@@ -1,4 +1,4 @@
-async function createChartForSleepAnalysis() {
+async function createChartForSleepAnalysis(date) {
     // Select the container where the charts will be added
     const container = document.querySelector('#right');
 
@@ -12,7 +12,7 @@ async function createChartForSleepAnalysis() {
     card.className = 'card';
 
     const title = document.createElement('h2');
-    title.textContent = 'Last Night Sleep Analysis';
+    title.textContent = date;
 
     const canvas = document.createElement('canvas');
     canvas.id = 'nightlyChart';
@@ -79,7 +79,5 @@ async function createChartForSleepAnalysis() {
         },
     });
 
-    // Populate the chart with data
-    const x = 10; // Set the number of sleep records to fetch
-    await populateGraphWithAverage(graph, x, true);
+    return graph;
 }

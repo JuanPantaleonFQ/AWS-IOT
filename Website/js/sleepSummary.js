@@ -234,8 +234,6 @@ async function getLastSleepRecords(x) {
 }
   
 
-
-
 async function populateGraphWithAverage(graph, x, dynamic) {
     try {
         // Use a promise-based approach to fetch sleep records
@@ -246,39 +244,41 @@ async function populateGraphWithAverage(graph, x, dynamic) {
             return;
         }
 
-        const lastSleepRecord = sleepRecords[0];
-        const startDate = new Date(lastSleepRecord.start_date);
-        const endDate = lastSleepRecord.end_date ? new Date(lastSleepRecord.end_date) : new Date(); // Use current time if no end_data
-        
-        if(dynamic){
-            $('#right .card:last-child h2').text(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
-        }
+        // Loop through all sleep records
+        for (let record of sleepRecords) {
+            const startDate = new Date(record.start_date);
+            const endDate = record.end_date ? new Date(record.end_date) : new Date(); // Use current time if no end_date
 
-        // Calculate the number of minutes slept
-        const periodInMinutes = Math.floor((endDate - startDate) / (1000 * 60)); // Period in minutes
-        let currentDatetime = startDate;
+            if (dynamic) {
+                graph = createChartForSleepAnalysis(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
+            }
 
-        // Loop through each period and fetch the real-time metrics
-        for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
-            try {
-                // Await the real-time metrics for the current period
-                const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
+            // Calculate the number of minutes slept for the current sleep record
+            const periodInMinutes = Math.floor((endDate - startDate) / (1000 * 60)); // Period in minutes
+            let currentDatetime = startDate;
 
-                // Update the graph with the received data
-                updateQualityGraph(graph, currentDatetime, data);
+            // Loop through each period and fetch the real-time metrics for this sleep record
+            for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
+                try {
+                    // Await the real-time metrics for the current period
+                    const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
 
-                // Move to the next period (advance by evaluationPeriod minutes)
-                currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
-            } catch (error) {
-                console.error('Error fetching real-time metrics for period starting at ' + currentDatetime.toISOString(), error);
+                    // Update the graph with the received data
+                    updateQualityGraph(graph, currentDatetime, data);
+
+                    // Move to the next period (advance by evaluationPeriod minutes)
+                    currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
+                } catch (error) {
+                    console.error('Error fetching real-time metrics for period starting at ' + currentDatetime.toISOString(), error);
+                }
             }
         }
 
     } catch (error) {
         console.error('Error populating graph with average metrics:', error);
     }
-
 }
+
 
 function updateQualityGraph(graph, datetime, metrics) {
     // Add the new data to the chart data arrays
