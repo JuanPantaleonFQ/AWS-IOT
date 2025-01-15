@@ -17,13 +17,6 @@ function createNightlyChart() {
             labels: data.hours,
             datasets: [
                 {
-                    type: 'bar',
-                    label: 'Movements',
-                    data: data.movements,
-                    backgroundColor: '#60a5fa',
-                    yAxisID: 'movements'
-                },
-                {
                     type: 'line',
                     label: 'Humidity (%)',
                     data: data.humidity,
@@ -46,6 +39,13 @@ function createNightlyChart() {
                     borderColor: '#f87171',
                     tension: 0.4,
                     yAxisID: 'temperature'
+                },
+                {
+                    type: 'bar',
+                    label: 'Movements',
+                    data: data.movements,
+                    backgroundColor: '#60a5fa',
+                    yAxisID: 'movements'
                 }
             ]
         },
@@ -233,7 +233,6 @@ async function populateGraphWithAverage(x) {
     try {
       // Use a promise-based approach to fetch sleep records
       const sleepRecords = await getLastSleepRecords(x);
-      console.log(sleepRecords);
   
       if (!sleepRecords || sleepRecords.length === 0) {
         console.error('No sleep records found');
@@ -250,7 +249,6 @@ async function populateGraphWithAverage(x) {
   
       // Loop through each period and fetch the real-time metrics
       for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
-        console.log(`${i} < ${periodInMinutes} + ` + evaluationPeriod)
         try {
           // Await the real-time metrics for the current period
           const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
@@ -265,17 +263,13 @@ async function populateGraphWithAverage(x) {
         }
       }
   
-      console.log('Graph populated with average metrics.');
     } catch (error) {
       console.error('Error populating graph with average metrics:', error);
     }
   }
   
-  
+
   function updateGraph(datetime, metrics) {
-    // Log incoming data
-    console.log('Updating graph with data for:', datetime);
-    console.log('Metrics:', metrics);
 
     // Add the new data to the chart data arrays
     const hour = new Date(datetime).getHours();  // Extract the hour from datetime
