@@ -122,7 +122,6 @@ async function getRealTimeMetrics(datetime, period) {
           alert('Error: ' + (data.error || data.message));
           reject('Error: ' + (data.error || data.message));  // Reject if there's an error in the response
         } else {
-          console.log(data);
           resolve(data);  // Resolve the promise with the response data
         }
       },

@@ -16,8 +16,6 @@ function updateLoadbar(){
   if (progress > 100) progress = 100; // Clamp to 100 if too large
   const offset = length - (length * progress) / 100; // Calculate offset
 
-  console.log(offset)
-
   // Apply the offset update with jQuery
   $path.css('stroke-dashoffset', offset);
 }
