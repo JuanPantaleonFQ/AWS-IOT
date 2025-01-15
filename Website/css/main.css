@@ -61,6 +61,9 @@ content{
   box-sizing: border-box;
   padding-top: 4rem;
 }
+#right .card{
+  min-height: 222px;
+}
 #down{
  bottom:-100%;
 }
