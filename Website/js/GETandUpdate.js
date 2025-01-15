@@ -4,7 +4,6 @@ async function fetchDataFromSQS() {
       const data = await response.json();
   
       if (response.ok) {
-        console.log('Received data from SQS:', data);
         $("#temperature").html(`${data.temperature}°C`);
         $("#humidity").html(`<i class="fas fa-tint"></i>${data.humidity}%`);
         $("#lux").html(`<i class="fas fa-sun"></i>${data.lux}`);

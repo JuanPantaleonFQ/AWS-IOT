@@ -234,57 +234,63 @@ async function getLastSleepRecords(x) {
 }
   
 
-async function populateGraphWithAverage(x) {
+
+
+async function populateGraphWithAverage(graph, x, dynamic) {
     try {
-      // Use a promise-based approach to fetch sleep records
-      const sleepRecords = await getLastSleepRecords(x);
-  
-      if (!sleepRecords || sleepRecords.length === 0) {
-        console.error('No sleep records found');
-        return;
-      }
-  
-      const lastSleepRecord = sleepRecords[0];
-      const startDate = new Date(lastSleepRecord.start_date);
-      const endDate = lastSleepRecord.end_date ? new Date(lastSleepRecord.end_date) : new Date(); // Use current time if no end_date
-  
-      // Calculate the number of minutes slept
-      const periodInMinutes = Math.floor((endDate - startDate) / (1000 * 60)); // Period in minutes
-      let currentDatetime = startDate;
-  
-      // Loop through each period and fetch the real-time metrics
-      for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
-        try {
-          // Await the real-time metrics for the current period
-          const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
-          
-          // Update the graph with the received data
-          updateQualityGraph(currentDatetime, data);
-  
-          // Move to the next period (advance by evaluationPeriod minutes)
-          currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
-        } catch (error) {
-          console.error('Error fetching real-time metrics for period starting at ' + currentDatetime.toISOString(), error);
+        // Use a promise-based approach to fetch sleep records
+        const sleepRecords = await getLastSleepRecords(x);
+
+        if (!sleepRecords || sleepRecords.length === 0) {
+            console.error('No sleep records found');
+            return;
         }
-      }
-  
+
+        const lastSleepRecord = sleepRecords[0];
+        const startDate = new Date(lastSleepRecord.start_date);
+        const endDate = lastSleepRecord.end_date ? new Date(lastSleepRecord.end_date) : new Date(); // Use current time if no end_date
+
+        // Calculate the number of minutes slept
+        const periodInMinutes = Math.floor((endDate - startDate) / (1000 * 60)); // Period in minutes
+        let currentDatetime = startDate;
+
+        // Loop through each period and fetch the real-time metrics
+        for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
+            try {
+                // Await the real-time metrics for the current period
+                const data = await getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod);
+
+                // Update the graph with the received data
+                updateQualityGraph(graph, currentDatetime, data);
+
+                // Move to the next period (advance by evaluationPeriod minutes)
+                currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
+            } catch (error) {
+                console.error('Error fetching real-time metrics for period starting at ' + currentDatetime.toISOString(), error);
+            }
+        }
+
     } catch (error) {
-      console.error('Error populating graph with average metrics:', error);
+        console.error('Error populating graph with average metrics:', error);
     }
-  }
-  
-function updateQualityGraph(datetime, metrics) {
+
+    if(dynamic){
+        $('#right .card:last-child h2').text(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
+    }
+}
+
+function updateQualityGraph(graph, datetime, metrics) {
     // Add the new data to the chart data arrays
     const hour = new Date(datetime).getHours();  // Extract the hour from datetime
-    charts.nightly.data.labels.push(`${hour}:00`);
+    graph.data.labels.push(`${hour}:00`);
 
-    charts.nightly.data.datasets[0].data.push(metrics.totalMotion);  // Movements
-    charts.nightly.data.datasets[1].data.push(metrics.averageHumidity);  // Humidity
-    charts.nightly.data.datasets[2].data.push(metrics.averageLux);  // Light
-    charts.nightly.data.datasets[3].data.push(metrics.averageTemperature);  // Temperature
+    graph.data.datasets[0].data.push(metrics.totalMotion);  // Movements
+    graph.data.datasets[1].data.push(metrics.averageHumidity);  // Humidity
+    graph.data.datasets[2].data.push(metrics.averageLux);  // Light
+    graph.data.datasets[3].data.push(metrics.averageTemperature);  // Temperature
 
     // Update the chart
-    charts.nightly.update();
+    graph.update();
 }
 
 async function populateGraphWithScore(nDays){ 
@@ -361,8 +367,9 @@ async function populateSleepConcistency(nDays) {
 $(document).ready(function () {   
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
-    populateGraphWithAverage(1);
+    populateGraphWithAverage(charts.nightly, 1);
     populateGraphWithScore(15);
     populateSleepConcistency(15);
+    createChartForSleepAnalysis()
   }
 }); 
