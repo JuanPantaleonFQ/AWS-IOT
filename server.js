@@ -230,11 +230,9 @@ app.post('/get-realtime-metrics', (req, res) => {
 
   // Convert the datetime string to a Date object
   const startDatetime = new Date(datetime);
-  console.log('Start Date:', startDatetime);
   
   // Calculate the end datetime based on the period (period in minutes)
   const endDatetime = new Date(startDatetime.getTime() + period * 60 * 1000); // period in minutes
-  console.log('End Date:', endDatetime);
   
   // Query to get data from the sensor_data table between startDatetime and endDatetime
   const query = `
@@ -247,7 +245,6 @@ app.post('/get-realtime-metrics', (req, res) => {
     FROM sensor_data
     WHERE timestamp BETWEEN ? AND ?`;
 
-  console.log('Query:', query, [startDatetime, endDatetime]);
 
   db.query(query, [startDatetime, endDatetime], (err, results) => {
     if (err) {
@@ -255,7 +252,6 @@ app.post('/get-realtime-metrics', (req, res) => {
       return res.status(500).send({ error: 'Failed to fetch real-time metrics' });
     }
 
-    console.log('Query Results:', results);
 
     // If no data was found in the given period
     if (results.length === 0) {
