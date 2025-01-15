@@ -8,9 +8,14 @@ async function createChartForSleepAnalysis(n, date) {
         console.error('Container #content-right not found');
         return;
     }
-    
-    const rightContent = document.getElementById("right");
-    rightContent.scrollTop = 0;
+
+    const $scrollableParent = $('#right');
+  
+  const resizeObserver = new ResizeObserver(() => {
+    $scrollableParent.scrollTop($scrollableParent[0].scrollHeight);
+  });
+
+  resizeObserver.observe($scrollableParent[0]);
 
     // Create a card with a canvas element for the chart
     const card = document.createElement('div');
