@@ -139,9 +139,6 @@ async function getRealTimeMetrics(datetime, period) {
   }
 }
 
-// Example usage with setInterval
-const period = 5; // Period in minutes
-
 setInterval(async function () {
   try {
     const metrics = await getRealTimeMetrics("now", period);
