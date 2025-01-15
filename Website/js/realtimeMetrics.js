@@ -1,4 +1,4 @@
-$(document).ready(function () {
+
 
 var datetime = "now";
 var period = 5;
@@ -159,5 +159,3 @@ setInterval(function () {
     metricsChart.update();
   });
 }, period * 60 * 1000);
-
-});
