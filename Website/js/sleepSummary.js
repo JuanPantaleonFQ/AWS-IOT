@@ -155,50 +155,48 @@ function createQualityChart() {
 }
 
 // Create regularity chart
-function createRegularityChart(data) {
+function createRegularityChart() {
     const ctx = document.getElementById('regularityChart');
-
-    // If the chart already exists, update it instead of creating a new one
+    const data = [];
+    
     if (charts.regularity) {
-        // Add the new data to the chart
-        charts.regularity.data.datasets[0].data = data.map(d => d.regularity); // Update data
-        charts.regularity.update(); // Update chart
-    } else {
-        // Create a new chart if it doesn't exist
-        charts.regularity = new Chart(ctx, {
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: 'Sleep Regularity',
-                    data: data.map(d => d.regularity), // Use the calculated regularity scores
-                    borderColor: '#34d399',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(52, 211, 153, 0.1)',
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        grid: { color: '#334155' },
-                        ticks: { color: '#94a3b8' },
-                    },
-                    x: {
-                        grid: { color: '#334155' },
-                        ticks: { display: false }, // Hide ticks on the x-axis
-                    }
+        charts.regularity.destroy();
+    }
+
+    charts.regularity = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.map(d => d.date.toLocaleDateString()),
+            datasets: [{
+                label: 'Sleep Regularity',
+                data: data.map(d => d.regularity),
+                borderColor: '#34d399',
+                tension: 0.4,
+                fill: true,
+                backgroundColor: 'rgba(52, 211, 153, 0.1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { color: '#334155' },
+                    ticks: { color: '#94a3b8' }
                 },
-                plugins: {
-                    legend: {
-                        labels: { color: '#94a3b8' },
-                    }
+                x: {
+                    grid: { color: '#334155' },
+                    ticks: { color: '#94a3b8' }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#94a3b8' }
                 }
             }
-        });
-    }
+        }
+    });
 }
 
 // Initialize all charts
@@ -307,8 +305,6 @@ async function populateGraphWithScore(nDays){
                 contentType: 'application/json',
                 data: JSON.stringify(sleepDay)
             });
-
-            console.log(response.totalScore);
             charts.quality.data.datasets[0].data.push(response.totalScore);
             charts.quality.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());  // Update labels too
         } catch (error) {
@@ -342,9 +338,10 @@ async function populateSleepConcistency(nDays) {
                 contentType: 'application/json',
                 data: JSON.stringify(sleepDay)
             });
+            console.log(response);
             // Push the new score to the chart's data
-            charts.quality.data.datasets[0].data.push(response.totalScore);
-            charts.quality.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());  // Update labels too
+            charts.quality.data.datasets[0].data.push(response.score);
+            charts.quality.data.labels.push(new Date(sleepDay.start_date).toLocaleDateString());
         } catch (error) {
             console.error('Error calculating score:', error);
             alert('An error occurred while calculating the score. Please try again.');
