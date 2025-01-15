@@ -240,6 +240,7 @@ function getLastSleepRecords(x, callback) {
         period: period
       }),
       success: function(response) {
+        console.log(response);
         callback(null, response);  // Call the callback with the response data
       },
       error: function(error) {
