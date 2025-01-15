@@ -439,7 +439,7 @@ app.post('/calculate-sleep-regularity-score', (req, res) => {
 });
 
 app.post('/get-records-by-filter', (req, res) => {
-  const { column, operand, value, query } = req.body;
+  const { column, operand, value} = req.body;
 
   // Validate inputs
   if (!column || !operand || typeof value === 'undefined') {

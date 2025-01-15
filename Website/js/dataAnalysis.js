@@ -95,17 +95,15 @@ async function getRecoredsByFilter() {
             return sleepRecords = await getLastSleepRecords(5);
         }
 
-        // Construct a query string for demonstration (actual SQL query would be on server-side)
-        const query = `SELECT * FROM sensor_data WHERE \"${column}\" ${operand} '${value}' ORDER BY \"${column}\"`;
-
         const response = await $.ajax({
             url: '/get-records-by-filter',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ column, operand, value, query }),
+            data: JSON.stringify({ column, operand, value }),
         });
 
         if (response && Array.isArray(response)) {
+            console.log(response)
             return response;
         } else {
             throw new Error('No matching records found');
