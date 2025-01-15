@@ -180,4 +180,40 @@ button{
 #metricsCard{
   flex-grow:1;
 }
-  
+
+
+/* Style for the icon container */
+.icon-container {
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 100%;
+  margin: 20px 0;
+  padding: 10px 0;
+  border-radius: 10px;
+  border:solid, var(--text-color), 2px;
+}
+
+.icon-container svg{
+  color: var(--text-color);
+}
+
+/* Style for individual icons */
+.sleep-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.sleep-icon:hover {
+  opacity: 0.7;
+}
+
+/* Hide elements initially */
+.hidden {
+  display: none;
+}

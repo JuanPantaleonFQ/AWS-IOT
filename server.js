@@ -170,6 +170,41 @@ app.get('/check-sleep-status', (req, res) => {
   });
 });
 
+// Route to start a new sleep session (Start Sleeping)
+app.post('/start-sleeping', (req, res) => {
+  const query = 'INSERT INTO SleepRecords (start) VALUES (?)';
+  const startTime = new Date();
+
+  db.query(query, [startTime], (err, result) => {
+    if (err) {
+      console.error('Failed to insert sleep start record:', err.stack);
+      return res.status(500).send({ error: 'Failed to start sleep' });
+    }
+
+    console.log('Sleep record started');
+    res.status(200).json({ success: true, recordId: result.insertId });
+  });
+});
+
+// Route to stop a sleep session (Stop Sleeping)
+app.post('/stop-sleeping', (req, res) => {
+  const { recordId, score } = req.body;
+  const stopTime = new Date();
+
+  // Update the latest sleep record with stop time and score
+  const query = 'UPDATE SleepRecords SET stop = ?, score = ? WHERE id = ?';
+
+  db.query(query, [stopTime, score, recordId], (err) => {
+    if (err) {
+      console.error('Failed to update sleep record:', err.stack);
+      return res.status(500).send({ error: 'Failed to stop sleep' });
+    }
+
+    console.log('Sleep record updated with stop time and score');
+    res.status(200).json({ success: true });
+  });
+});
+
 
 
 
