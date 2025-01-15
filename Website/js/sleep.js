@@ -11,6 +11,7 @@ $.get('/check-sleep-status', function (data) {
 $(document).ready(function () {
     // When the "Start Sleeping" button is clicked
     $('#sleepButton').on('click', function () {
+        console.log("button clicked")
         if ($(this).text() === "Start sleeping") {
             const startTime = new Date().toISOString();  // Capture the current time in ISO format
 
