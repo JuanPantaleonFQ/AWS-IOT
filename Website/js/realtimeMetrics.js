@@ -1,5 +1,5 @@
 var datetime = "now";
-var period = 5;
+var period = 1;
 
 const ctx = document.getElementById('metricsChart').getContext('2d');
 let metricsChart;
@@ -126,7 +126,7 @@ async function getRealTimeMetrics(datetime, period) {
         }
       },
       error: function(error) {
-        console.log('Error fetching metrics:', error);
+        console.log('Error fetching metrics');
         alert('Failed to fetch metrics. Please try again.');
         reject(error);  // Reject in case of AJAX error
       }
@@ -141,7 +141,7 @@ createChart();
 setInterval(async function() {
   try {
     // Fetch real-time metrics data, wait until it's resolved
-    var data = await getRealTimeMetrics("now", 60);
+    var data = await getRealTimeMetrics("now", 1);
     
     // Extract the relevant data from the response
     const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
