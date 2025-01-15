@@ -157,19 +157,22 @@ function createQualityChart() {
 // Create regularity chart
 function createRegularityChart() {
     const ctx = document.getElementById('regularityChart');
-    const data = [];
-    
+    const data = {
+        consistency: [], // to hold labels
+        regularity: []   // to hold sleep regularity scores
+    };
+
     if (charts.regularity) {
-        charts.regularity.destroy();
+        charts.regularity.destroy(); // Destroy existing chart before creating a new one
     }
 
     charts.regularity = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.consitency,
+            labels: data.consistency, // This will hold the labels (dates)
             datasets: [{
                 label: 'Sleep Regularity',
-                data: data.map(d => d.regularity),
+                data: data.regularity, // This will hold the scores
                 borderColor: '#34d399',
                 tension: 0.4,
                 fill: true,
@@ -320,6 +323,8 @@ async function populateGraphWithScore(nDays){
 async function populateSleepConcistency(nDays) {
     const sleepRecords = await getLastSleepRecords(nDays);
     console.log(sleepRecords);
+    
+    // Loop through each record to calculate the sleep regularity score
     for (let i = 0; i < sleepRecords.length; i++) {
         const sleepDay = {
             sleepId: sleepRecords[i].id,
@@ -328,25 +333,30 @@ async function populateSleepConcistency(nDays) {
         };
         
         try {
-            // Using await to ensure that each AJAX call is completed before moving on
+            // Sending the sleep data to the server and getting the score back
             const response = await $.ajax({
                 url: '/calculate-sleep-regularity-score',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(sleepDay)
             });
+
             console.log(response);
+
             // Push the new score to the chart's data
-            charts.regularity.data.datasets[0].data.push(response.score);
+            charts.regularity.data.labels.push(new Date(sleepRecords[i].start_date).toLocaleDateString()); // Adding date to the labels
+            charts.regularity.data.datasets[0].data.push(response.score); // Adding score to the chart data
+
+            // Update the chart immediately after each push
+            charts.regularity.update();
+
         } catch (error) {
             console.error('Error calculating score:', error);
-            alert('An error occurred while calculating the score. Please try again.');
+            alert('An error occurred while calculating the score for day ' + (i + 1) + '. Please try again.');
         }
     }
-
-    // After the loop finishes, update the chart
-    charts.regularity.update();
 }
+
 
 $(document).ready(function () {   
   // Call the function to populate the graph with the most recent sleep data
