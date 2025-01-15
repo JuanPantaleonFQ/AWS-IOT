@@ -92,7 +92,7 @@ async function getRecoredsByFilter() {
         value = $("#value").val();
 
         if (!column || !operand || typeof value === 'undefined') {
-            return sleepRecords = await getLastSleepRecords(x);
+            return sleepRecords = await getLastSleepRecords(5);
         }
 
         // Construct a query string for demonstration (actual SQL query would be on server-side)
