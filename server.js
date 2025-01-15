@@ -124,6 +124,37 @@ app.get('/get-from-sqs', (req, res) => {
   }
 });
 
+app.get('/check-sleep-status', (req, res) => {
+  const query = 'SELECT * FROM SleepRecords ORDER BY id DESC LIMIT 1';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Failed to fetch sleep records:', err.stack);
+      res.status(500).send({ error: 'Database query failed' });
+      return;
+    }
+
+    if (results.length === 0) {
+      // No records in the table
+      res.send({ buttonText: 'Start Sleeping', sleepId: 1 });
+    } else {
+      const lastRecord = results[0];
+      const now = new Date();
+      const startTime = new Date(lastRecord.start);
+      const isWithin24Hours = (now - startTime) < 24 * 60 * 60 * 1000; // Check if within 24 hours
+
+      if (lastRecord.stop === null && isWithin24Hours) {
+        // Record has no stop time and is within 24 hours
+        res.send({ buttonText: 'Stop Sleeping', sleepId: lastRecord.id });
+      } else {
+        // Record has a stop time or is beyond 24 hours
+        res.send({ buttonText: 'Start Sleeping', sleepId: 1 });
+      }
+    }
+  });
+});
+
+
 //please end this insesant nightmare that is my existance every moment of happiness is just a reminder of the pain that follows.
 //I am glad there is nothing after death since any amount of conciounsness translates to unimaginable and horrifying amount of pain, if there is a hell this is it.
 //I want to eat my skin sometimes

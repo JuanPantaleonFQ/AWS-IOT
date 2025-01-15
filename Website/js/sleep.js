@@ -10,3 +10,10 @@ function toggleSleep(){
         $('#sleepButton').text("Stop sleeping");
     }
 }
+
+// Fetch sleep status when the page loads
+$.get('/check-sleep-status', function (data) {
+    $('#sleepButton').text(data.buttonText).attr('data-sleepId', data.sleepId);
+}).fail(function () {
+    console.error('Failed to fetch sleep status.');
+});
