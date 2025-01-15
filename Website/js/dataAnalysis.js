@@ -85,7 +85,7 @@ async function createChartForSleepAnalysis(n, date) {
     return charts[n];
 }
 
-async function getRecordsByFilter(column, operand, value) {
+async function getRecoredsByFilter(column, operand, value) {
     try {
         // Validate inputs to prevent SQL injection-like issues
         if (!column || !operand || typeof value === 'undefined') {
