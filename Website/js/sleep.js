@@ -33,8 +33,6 @@ $(document).ready(function () {
                 success: function(response) {
                     console.log('Sleep started successfully');
                     $('#sleepButton').text('Stop sleeping');  // Change button text to "Stop Sleeping"
-                    $('#iconContainer').removeClass('hidden');  // Show icons (for score selection)
-                    $('#scoreSelection').hide();  // Hide the score selection initially
                 },
                 error: function(err) {
                     console.error('Failed to start sleeping:', err);
@@ -44,7 +42,7 @@ $(document).ready(function () {
         else if ($(this).text() === "Stop sleeping") {
             // When the stop button is clicked, hide the button and show score selection
             $('#sleepButton').hide();  // Hide the "Stop Sleeping" button
-            $('#scoreSelection').show();  // Show the score selection interface
+            $('#iconContainer').removeClass('hidden');  // Show icons (for score selection)
         }
     });
 
