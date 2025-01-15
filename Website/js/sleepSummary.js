@@ -248,7 +248,11 @@ async function populateGraphWithAverage(graph, x, dynamic) {
 
         const lastSleepRecord = sleepRecords[0];
         const startDate = new Date(lastSleepRecord.start_date);
-        const endDate = lastSleepRecord.end_date ? new Date(lastSleepRecord.end_date) : new Date(); // Use current time if no end_date
+        const endDate = lastSleepRecord.end_date ? new Date(lastSleepRecord.end_date) : new Date(); // Use current time if no end_data
+        
+        if(dynamic){
+            $('#right .card:last-child h2').text(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
+        }
 
         // Calculate the number of minutes slept
         const periodInMinutes = Math.floor((endDate - startDate) / (1000 * 60)); // Period in minutes
@@ -274,9 +278,6 @@ async function populateGraphWithAverage(graph, x, dynamic) {
         console.error('Error populating graph with average metrics:', error);
     }
 
-    if(dynamic){
-        $('#right .card:last-child h2').text(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
-    }
 }
 
 function updateQualityGraph(graph, datetime, metrics) {
