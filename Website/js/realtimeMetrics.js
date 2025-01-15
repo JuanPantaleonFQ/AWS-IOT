@@ -140,7 +140,7 @@ setInterval(function () {
     }
 
     console.log("Metrics received:", response);
-
+/*
     // Extract the relevant data from the response
     const newLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get current time (HH:MM)
     const newTemperature = response.averageTemperature;
@@ -156,6 +156,6 @@ setInterval(function () {
     chartData.datasets[3].data.push(newMotion); // Add movement
 
     // Update the chart with the new data
-    metricsChart.update();
+    metricsChart.update();*/
   });
 }, period * 60 * 1000);
