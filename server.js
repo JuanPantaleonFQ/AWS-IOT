@@ -145,7 +145,7 @@ app.get('/check-sleep-status', (req, res) => {
 
       if (lastRecord.stop === null && !isWithin24Hours) {
         // If the last record has no stop time and is older than 24 hours, update the stop time
-        const updateQuery = 'UPDATE SleepRecords SET stop = ? WHERE id = ?';
+        const updateQuery = 'UPDATE SleepRecords SET end_date = ? WHERE id = ?';
         const stopTime = new Date(); // Current time as stop time
 
         db.query(updateQuery, [stopTime, lastRecord.id], (updateErr) => {
@@ -170,12 +170,12 @@ app.get('/check-sleep-status', (req, res) => {
   });
 });
 
-// Route to start a new sleep session (Start Sleeping)
 app.post('/start-sleeping', (req, res) => {
-  const query = 'INSERT INTO SleepRecords (start) VALUES (?)';
-  const startTime = new Date();
+  const { startTime } = req.body;  // Date and time passed from the frontend
 
-  db.query(query, [startTime], (err, result) => {
+  const query = 'INSERT INTO SleepRecords (start_date) VALUES (?)';
+
+  db.query(query, [new Date(startTime)], (err, result) => {
     if (err) {
       console.error('Failed to insert sleep start record:', err.stack);
       return res.status(500).send({ error: 'Failed to start sleep' });
@@ -186,15 +186,13 @@ app.post('/start-sleeping', (req, res) => {
   });
 });
 
-// Route to stop a sleep session (Stop Sleeping)
+
 app.post('/stop-sleeping', (req, res) => {
-  const { recordId, score } = req.body;
-  const stopTime = new Date();
+  const { recordId, score, stopTime } = req.body;  // Stop time passed from frontend
 
-  // Update the latest sleep record with stop time and score
-  const query = 'UPDATE SleepRecords SET stop = ?, score = ? WHERE id = ?';
+  const query = 'UPDATE SleepRecords SET end_date = ?, score = ? WHERE id = ?';
 
-  db.query(query, [stopTime, score, recordId], (err) => {
+  db.query(query, [new Date(stopTime), score, recordId], (err) => {
     if (err) {
       console.error('Failed to update sleep record:', err.stack);
       return res.status(500).send({ error: 'Failed to stop sleep' });
@@ -204,6 +202,7 @@ app.post('/stop-sleeping', (req, res) => {
     res.status(200).json({ success: true });
   });
 });
+
 
 
 

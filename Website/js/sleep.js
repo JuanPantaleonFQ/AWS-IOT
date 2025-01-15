@@ -20,54 +20,58 @@ $.get('/check-sleep-status', function (data) {
 */
 
 $(document).ready(function () {
-    let currentRecordId = null;  // Variable to store the current record's ID
-  
     // When the "Start Sleeping" button is clicked
     $('#sleepButton').on('click', function () {
       if ($(this).text() === "Start sleeping") {
-        // Create a new sleep record (start sleeping)
+        const startTime = new Date().toISOString();  // Capture the current time in ISO format
+  
+        // Send start time to the backend to start a new sleep session
         $.ajax({
           url: '/start-sleeping',
           method: 'POST',
-          success: function (response) {
-            if (response.success) {
-              currentRecordId = response.recordId;  // Store the record ID
-              $(this).text('Stop sleeping');
-              $("#bed").css("visibility", "visible");
-            }
+          contentType: 'application/json',
+          data: JSON.stringify({ startTime }),  // Pass start time as part of the request body
+          success: function(response) {
+            console.log('Sleep started successfully');
+            $('#sleepButton').text('Stop sleeping');
+            $('#iconContainer').removeClass('hidden');
           },
-          error: function () {
-            alert('Error starting sleep');
+          error: function(err) {
+            console.error('Failed to start sleeping:', err);
           }
         });
       } 
       else if ($(this).text() === "Stop sleeping") {
-        // Hide the button and show the icons
-        $('#iconContainer').removeClass('hidden');
-        $('#sleepButton').addClass('hidden');
-        $("#bed").css("visibility", "hidden");
+        // When the stop button is clicked, get the stop time and score
+        const stopTime = new Date().toISOString();  // Capture the current time
+        const score = $('#score').val();  // Get the score selected by the user
+  
+        const sleepId = $('#sleepButton').data('sleepId');  // Get the sleep session ID from the button
+  
+        // Send stop time and score to the backend to update the sleep record
+        $.ajax({
+          url: '/stop-sleeping',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ recordId: sleepId, stopTime, score }),  // Send stop time, score, and recordId
+          success: function(response) {
+            console.log('Sleep stopped and scored successfully');
+            $('#sleepButton').text('Start sleeping');
+            $('#iconContainer').addClass('hidden');
+          },
+          error: function(err) {
+            console.error('Failed to stop sleeping:', err);
+          }
+        });
       }
     });
   
-    // When an icon is clicked (1-5 scale)
+    // When an icon is clicked, it should send the score and stop the session
     $('.sleep-icon').on('click', function () {
-      const score = $(this).data('score');  // Get the score value from data attribute
+      const score = $(this).data('score');  // Get the score from the icon (1-5)
   
-      // Update the sleep record with stop time and score
-      $.ajax({
-        url: '/stop-sleeping',
-        method: 'POST',
-        data: { recordId: currentRecordId, score: score },
-        success: function (response) {
-          if (response.success) {
-            // Hide the icons and show the "Start Sleeping" button
-            $('#iconContainer').addClass('hidden');
-            $('#sleepButton').removeClass('hidden').text('Start sleeping');
-          }
-        },
-        error: function () {
-          alert('Error stopping sleep');
-        }
-      });
+      // Trigger the stop button click to submit the score and stop time
+      $('#sleepButton').click();
     });
   });
+  
