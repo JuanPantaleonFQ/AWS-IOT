@@ -250,7 +250,7 @@ async function populateGraphWithAverage(graph, x, dynamic) {
             const endDate = record.end_date ? new Date(record.end_date) : new Date(); // Use current time if no end_date
 
             if (dynamic) {
-                graph = createChartForSleepAnalysis(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
+                graph = await createChartForSleepAnalysis(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
             }
 
             // Calculate the number of minutes slept for the current sleep record
@@ -371,6 +371,6 @@ $(document).ready(function () {
     populateGraphWithAverage(charts.nightly, 1);
     populateGraphWithScore(15);
     populateSleepConcistency(15);
-    populateGraphWithAverage(null, 1, true);
+    populateGraphWithAverage(null, 3, true);
   }
 }); 
