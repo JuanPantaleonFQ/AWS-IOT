@@ -448,10 +448,10 @@ app.post('/get-records-by-filter', (req, res) => {
 
   // Prepare the query using sanitized values (to prevent SQL injection)
   const safeColumn = db.escapeId(column);
-  const safeOperand = db.escape(operand); // assuming operand is an operator like '=', '>', '<'
   const safeValue = db.escape(value);
 
   const sqlQuery = `SELECT * FROM sensor_data WHERE ${safeColumn} ${safeOperand} ${safeValue} ORDER BY ${safeColumn}`;
+  console.log(sqlQuery);
 
   // Execute the query
   db.query(sqlQuery, (err, results) => {
