@@ -437,4 +437,3 @@ app.post('/calculate-sleep-regularity-score', (req, res) => {
     res.json({ score });
   });
 });
-
