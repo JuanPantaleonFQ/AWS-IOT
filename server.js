@@ -137,7 +137,7 @@ app.get('/check-sleep-status', (req, res) => {
 
     if (results.length === 0) {
       // No records in the table
-      res.send({ buttonText: 'Start Sleeping', sleepId: 1 });
+      res.send({ buttonText: 'Start sleeping', sleepId: 1 });
     } else {
       const lastRecord = results[0];
       const now = new Date();
@@ -158,14 +158,14 @@ app.get('/check-sleep-status', (req, res) => {
 
           console.log('Sleep record updated with stop time');
           // Respond with the button state to allow user to start sleeping again
-          res.send({ buttonText: 'Start Sleeping', sleepId: 1 });
+          res.send({ buttonText: 'Start sleeping', sleepId: 1 });
         });
       } else if (lastRecord.stop === null && isWithin24Hours) {
         // Record has no stop time and is within 24 hours
-        res.send({ buttonText: 'Stop Sleeping', sleepId: lastRecord.id });
+        res.send({ buttonText: 'Stop sleeping', sleepId: lastRecord.id });
       } else {
         // Record has a stop time or is beyond 24 hours
-        res.send({ buttonText: 'Start Sleeping', sleepId: 1 });
+        res.send({ buttonText: 'Start sleeping', sleepId: 1 });
       }
     }
   });
