@@ -86,5 +86,22 @@ async function createChartForSleepAnalysis(n, date) {
 }
 
 async function getRecoredsByFilter(column, operand, value){
-    
+    try {
+        const response = await $.ajax({
+            url: '/get-records-by-filter',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ column, operand, value}), // Send the number of records you want
+        });
+        if (response && Array.isArray(response)) {
+            return response; 
+        } 
+        else {
+            throw new Error('No sleep records found');
+        }
+    } 
+    catch (error) {
+        console.error('Error fetching sleep records:', error);
+        throw error;  // Throw the error so it can be caught by the caller
+    }
 }
