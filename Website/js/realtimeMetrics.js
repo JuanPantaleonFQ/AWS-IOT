@@ -150,3 +150,7 @@ function updateChart(datetime, period) {
 
 // Initialize
 createChart();
+
+setInterval(function() {
+  updateChart("now", 5); // Call with "now" for real-time data and 5-minute period
+}, 300000); 
