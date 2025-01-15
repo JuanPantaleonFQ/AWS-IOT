@@ -372,6 +372,6 @@ $(document).ready(function () {
     populateGraphWithAverage(charts.nightly, 1);
     populateGraphWithScore(15);
     populateSleepConcistency(15);
-    populateGraphWithAverage(null, 3, true);
+    populateGraphWithAverage(null, 15, true);
   }
 }); 
