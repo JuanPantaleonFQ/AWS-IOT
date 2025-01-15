@@ -306,6 +306,7 @@ async function populateGraphWithScore(nDays){
             success: function(response) {
                 console.log(response)
                 charts.quality.data.datasets[0].data.push(response.totalScore);
+                charts.quality.update();
             },
             error: function(xhr, status, error) {
               console.error('Error calculating score:', error);
