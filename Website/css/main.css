@@ -11,6 +11,10 @@
 select{
   background: none;
 }
+input{
+  background: none;
+  border-bottom: solid 1px var(--background-color);
+}
 *{
   border:none;
   padding:0;
