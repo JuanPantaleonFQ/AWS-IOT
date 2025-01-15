@@ -319,21 +319,18 @@ async function populateGraphWithScore(nDays){
 
 async function populateSleepConcistency(nDays) {
     const sleepRecords = await getLastSleepRecords(nDays);
-
+    console.log(sleepRecords);
     for (let i = 0; i < sleepRecords.length; i++) {
         const sleepDay = {
-            start_date: new Date(sleepRecords[i].start_date),
-            end_date: new Date(sleepRecords[i].end_date),
-            score: sleepRecords[i].score,
-            w1: w1,
-            w2: w2,
-            w3: w3
+            sleepId: sleepRecords[i].id,
+            currentSleepStart: new Date(sleepRecords[i].start_date),
+            currentSleepStop: new Date(sleepRecords[i].end_date)
         };
         
         try {
             // Using await to ensure that each AJAX call is completed before moving on
             const response = await $.ajax({
-                url: '/calculate-sleeping-score',
+                url: '/calculate-sleep-regularity-score',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(sleepDay)
