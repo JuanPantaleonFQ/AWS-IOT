@@ -276,9 +276,10 @@ async function populateGraphWithAverage(x) {
     console.log('Metrics:', metrics);
     // Update the chart here (e.g., using a chart library)
   }
-  
+ 
+$(document).ready(function () {   
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
     populateGraphWithAverage(1);
   }
-  
+}); 
