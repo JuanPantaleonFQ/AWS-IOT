@@ -1,3 +1,9 @@
 git pull -> 1234
 mysql -h ec2-db.crgkwmuay2gt.eu-north-1.rds.amazonaws.com -u admin -p -> 1234master
-ALTER TABLE sensor_data CHANGE analog_sensor lux INT;
+
+CALL insert_fake_data_from_time('2025-01-15 12:00:00', 'past');
+CALL insert_fake_data_from_time('2025-01-15 00:00:00', 'future');
+    ^
+    |
+    |
+to call the procedure to create fake data

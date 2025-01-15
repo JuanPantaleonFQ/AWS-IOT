@@ -278,9 +278,7 @@ app.post('/get-realtime-metrics', (req, res) => {
       averageTemperature: avgTemperature,
       averageHumidity: avgHumidity,
       averageLux: avgLux,
-      totalMotion: totalMotion,
-      periodStart: startDatetime,
-      periodEnd: endDatetime
+      totalMotion: totalMotion
     });
   });
 });
