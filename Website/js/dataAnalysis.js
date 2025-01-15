@@ -2,6 +2,8 @@ async function createChartForSleepAnalysis(date) {
     // Select the container where the charts will be added
     const container = document.querySelector('#right');
 
+    console.log(date);
+
     if (!container) {
         console.error('Container #content-right not found');
         return;
