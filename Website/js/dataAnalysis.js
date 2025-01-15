@@ -85,23 +85,31 @@ async function createChartForSleepAnalysis(n, date) {
     return charts[n];
 }
 
-async function getRecoredsByFilter(column, operand, value){
+async function getRecordsByFilter(column, operand, value) {
     try {
+        // Validate inputs to prevent SQL injection-like issues
+        if (!column || !operand || typeof value === 'undefined') {
+            throw new Error('Invalid parameters provided');
+        }
+
+        // Construct a query string for demonstration (actual SQL query would be on server-side)
+        const query = `SELECT * FROM sensor_data WHERE \"${column}\" ${operand} '${value}' ORDER BY \"${column}\"`;
+
         const response = await $.ajax({
             url: '/get-records-by-filter',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ column, operand, value}), // Send the number of records you want
+            data: JSON.stringify({ column, operand, value, query }),
         });
+
         if (response && Array.isArray(response)) {
-            return response; 
-        } 
-        else {
-            throw new Error('No sleep records found');
+            return response;
+        } else {
+            throw new Error('No matching records found');
         }
-    } 
-    catch (error) {
-        console.error('Error fetching sleep records:', error);
-        throw error;  // Throw the error so it can be caught by the caller
+    } catch (error) {
+        console.error('Error fetching records:', error);
+        throw error;
     }
 }
+
