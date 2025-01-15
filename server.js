@@ -377,7 +377,7 @@ app.post('/calculate-sleeping-score', (req, res) => {
 
       console.log(totalSleepTime, movementPenalty, score);
       // Calculate the total score using the provided formula
-      const totalScore = (totalSleepTime / 8) * w1 + (100 - movementPenalty * w2) + score * w3;
+      const totalScore = (totalSleepTime / 8) * w1 + (100 - movementPenalty) * w2 + score * w3;
   
       // Send response with the calculated total score
       res.json({ totalScore });
