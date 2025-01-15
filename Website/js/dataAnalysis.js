@@ -91,7 +91,7 @@ async function getRecoredsByFilter() {
         operand = $("#symbol").val();
         value = $("#value").val();
 
-        if (!column || !operand || typeof value === 'undefined') {
+        if (value == "") {
             return sleepRecords = await getLastSleepRecords(5);
         }
 
