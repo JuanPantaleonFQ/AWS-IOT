@@ -289,18 +289,17 @@ app.post('/get-realtime-metrics', (req, res) => {
   });
 });
 
+app.post('/get-last-sleep-records', (req, res) => {
+  const { limit } = req.body;  // Read 'limit' from the request body
 
-app.get('/get-last-sleep-records', (req, res) => {
-  const { x } = req.query;  // Read the 'x' parameter from the query string
-
-  if (!x || isNaN(x) || x <= 0) {
+  if (!limit || isNaN(limit) || limit <= 0) {
     return res.status(400).send({ error: 'Invalid number of records requested' });
   }
 
   const query = 'SELECT * FROM SleepRecords ORDER BY start_date DESC LIMIT ?';
 
-  // Using 'x' as the limit for the number of records
-  db.query(query, [parseInt(x)], (err, results) => {
+  // Using 'limit' as the limit for the number of records
+  db.query(query, [parseInt(limit)], (err, results) => {
     if (err) {
       console.error('Failed to fetch sleep records:', err.stack);
       return res.status(500).send({ error: 'Database query failed' });
@@ -314,6 +313,7 @@ app.get('/get-last-sleep-records', (req, res) => {
     res.status(200).json(results);
   });
 });
+
 
 
 
