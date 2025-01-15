@@ -1,36 +1,6 @@
 // Store chart instances globally
 let charts = {};
 
-// Generate mock data for historical trends
-function generateHistoricalData(days) {
-    return Array.from({ length: days }, (_, i) => ({
-        date: new Date(Date.now() - (days - i - 1) * 24 * 60 * 60 * 1000),
-        quality: 70 + Math.random() * 20,
-        regularity: 75 + Math.random() * 15
-    }));
-}
-
-// Generate mock data for nightly analysis
-function generateNightlyData() {
-    const hours = Array.from({length: 8}, (_, i) => `${22 + Math.floor(i/2)}:${i % 2 ? '30' : '00'}`);
-    return {
-        hours,
-        movements: hours.map(() => Math.floor(Math.random() * 10)),
-        humidity: hours.map(() => 40 + Math.random() * 20),
-        light: hours.map(() => Math.random() * 15),
-        temperature: hours.map(() => 18 + Math.random() * 5)
-    };
-}
-
-// Generate mock data for sleep stages
-function generateSleepStages() {
-    return [
-        { name: 'Deep Sleep', value: 20 + Math.random() * 10 },
-        { name: 'REM Sleep', value: 15 + Math.random() * 10 },
-        { name: 'Light Sleep', value: 45 + Math.random() * 10 }
-    ];
-}
-
 // Create nightly analysis chart
 function createNightlyChart() {
     const ctx = document.getElementById('nightlyChart');
@@ -235,3 +205,101 @@ function initializeCharts() {
 
 // Initialize charts on load
 document.addEventListener('DOMContentLoaded', initializeCharts);
+
+
+// Function to fetch sleep records using $.ajax wrapped in a Promise
+function getLastSleepRecords(x, callback) {
+    $.ajax({
+      url: '/get-last-sleep-records',  // Adjusted endpoint
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ limit: x }), // Send the number of records you want
+      success: function(data) {
+        if (data && Array.isArray(data)) {
+          callback(null, data);  // Call the callback with the data
+        } else {
+          alert('No sleep records found');
+          callback(null, null);  // Call with null if no data
+        }
+      },
+      error: function(error) {
+        console.error('Error fetching sleep records:', error);
+        callback(error, null);  // Call the callback with the error
+      }
+    });
+  }
+  
+  // Function to call backend and get real-time metrics
+  function getRealTimeMetrics(datetime, period, callback) {
+    $.ajax({
+      url: '/get-realtime-metrics',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        datetime: datetime,
+        period: period
+      }),
+      success: function(response) {
+        callback(null, response);  // Call the callback with the response data
+      },
+      error: function(error) {
+        callback(error, null);  // Call the callback with the error
+      }
+    });
+  }
+  
+  // Function to populate the graph with average data
+function populateGraphWithAverage(x) {
+    getLastSleepRecords(x, function(error, sleepRecords) {
+      if (error) {
+        console.error('Error fetching sleep records:', error);
+        return;
+      }
+  
+      if (!sleepRecords || sleepRecords.length === 0) {
+        console.error('No sleep records found');
+        return;
+      }
+  
+      const lastSleepRecord = sleepRecords[0];
+      const startDate = new Date(lastSleepRecord.start_date);
+      const endDate = lastSleepRecord.end_date ? new Date(lastSleepRecord.end_date) : new Date(); // Use current time if no end_date
+  
+      // Calculate the number of minutes slept
+      const periodInMinutes = Math.floor((endDate - startDate) / (1000 * 60)); // Period in minutes
+      let currentDatetime = startDate;
+  
+      // Loop through each period and fetch the real-time metrics
+      for (let i = 0; i <= periodInMinutes; i += evaluationPeriod) {
+        // Call the getRealTimeMetrics function without async/await
+        getRealTimeMetrics(currentDatetime.toISOString(), evaluationPeriod, function(metricsError, metrics) {
+          if (metricsError) {
+            console.error('Error fetching real-time metrics:', metricsError);
+            return;
+          }
+  
+          // Update the graph with the received data
+          updateGraph(currentDatetime, metrics);
+  
+          // Move to the next period (advance by evaluationPeriod minutes)
+          currentDatetime.setMinutes(currentDatetime.getMinutes() + evaluationPeriod);
+        });
+      }
+  
+      console.log('Graph populated with average metrics.');
+    });
+}
+  
+  // Function to update the graph with new data
+  function updateGraph(datetime, metrics) {
+    // Example update function, you can implement your graph update logic here
+    console.log('Updating graph with data for:', datetime);
+    console.log('Metrics:', metrics);
+    // Update the chart here (e.g., using a chart library)
+  }
+  
+  // Call the function to populate the graph with the most recent sleep data
+  if(!sleeping){
+    populateGraphWithAverage(1);
+  }
+  

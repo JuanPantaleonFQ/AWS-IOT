@@ -222,7 +222,7 @@ app.post('/stop-sleeping', (req, res) => {
 });
 
 app.post('/get-realtime-metrics', (req, res) => {
-  const { datetime, period } = req.body;  // Datetime and period (in hours) from the frontend
+  const { datetime, period } = req.body;  // Datetime and period (in minutes) from the frontend
 
   if (!datetime || !period) {
     return res.status(400).send({ error: 'Datetime and period are required' });
@@ -231,8 +231,8 @@ app.post('/get-realtime-metrics', (req, res) => {
   // Convert the datetime string to a Date object
   const startDatetime = new Date(datetime);
   
-  // Calculate the end datetime based on the period (period in hours)
-  const endDatetime = new Date(startDatetime.getTime() + period * 60 * 1000); // period in hours
+  // Calculate the end datetime based on the period (period in minutes)
+  const endDatetime = new Date(startDatetime.getTime() + period * 60 * 1000); // period in minutes
   
   // Query to get data from the sensor_data table between startDatetime and endDatetime
   const query = `
@@ -283,7 +283,30 @@ app.post('/get-realtime-metrics', (req, res) => {
   });
 });
 
+app.get('/get-last-sleep-records', (req, res) => {
+  const { x } = req.query;  // Read the 'x' parameter from the query string
 
+  if (!x || isNaN(x) || x <= 0) {
+    return res.status(400).send({ error: 'Invalid number of records requested' });
+  }
+
+  const query = 'SELECT * FROM SleepRecords ORDER BY start_date DESC LIMIT ?';
+
+  // Using 'x' as the limit for the number of records
+  db.query(query, [parseInt(x)], (err, results) => {
+    if (err) {
+      console.error('Failed to fetch sleep records:', err.stack);
+      return res.status(500).send({ error: 'Database query failed' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send({ message: 'No sleep records found' });
+    }
+
+    // Send the records as the response
+    res.status(200).json(results);
+  });
+});
 
 
 
