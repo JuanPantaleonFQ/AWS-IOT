@@ -272,14 +272,25 @@ async function populateGraphWithAverage(x) {
   }
   
   
-  // Function to update the graph with new data
   function updateGraph(datetime, metrics) {
-    // Example update function, you can implement your graph update logic here
+    // Log incoming data
     console.log('Updating graph with data for:', datetime);
     console.log('Metrics:', metrics);
-    // Update the chart here (e.g., using a chart library)
-  }
- 
+
+    // Add the new data to the chart data arrays
+    const hour = new Date(datetime).getHours();  // Extract the hour from datetime
+    charts.nightly.data.labels.push(`${hour}:00`);
+
+    // Assuming metrics have these fields: temperature, humidity, light, totalMotion
+    charts.nightly.data.datasets[0].data.push(metrics.totalMotion);  // Movements
+    charts.nightly.data.datasets[1].data.push(metrics.averageHumidity);  // Humidity
+    charts.nightly.data.datasets[2].data.push(metrics.averageLux);  // Light
+    charts.nightly.data.datasets[3].data.push(metrics.averageTemperature);  // Temperature
+
+    // Update the chart
+    charts.nightly.update();
+}
+
 $(document).ready(function () {   
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
