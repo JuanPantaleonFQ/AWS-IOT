@@ -121,8 +121,21 @@
   </content>
   <content id="right">
     <div id="statusBar">
-      <span></span>
-      <label>Search</label>
+      sort by 
+      <select name="" id="column">
+        <option value="temperature">Temperature</option>
+        <option value="humidity">Humidity</option>
+        <option value="movement">Movement</option>
+        <option value="lux">Lux</option>
+        <option value="timestamp">Date</option>
+      </select>
+      <select name="" id="symbol">
+        <option value="=">=<option>
+        <option value=">=">&lt;=</option>
+        <option value="<=">&lt;=</option>
+        <option value=">">&lt;</option>
+        <option value="<">&lt;</option>
+      </select><input type="text" name="" id="">
       <div id="time"></div>
     </div>
   </content>
