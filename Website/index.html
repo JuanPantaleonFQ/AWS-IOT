@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/main.css">
-  <link rel="stylesheet" href="./css/navigation.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
 <body>
@@ -22,13 +22,10 @@
       <div id="time"></div>
     </div>
 
-    
     <div id="widget">
       <svg id="loadBar" width="200" height="200" viewBox="0 0 200 200">
-          <!-- Background circle (border) -->
           <circle cx="100" cy="100" r="90" fill="none" stroke="#ddd" stroke-width="10"></circle>
           
-          <!-- Foreground path (progress bar) -->
           <path
               d="M 100, 100 m -90, 0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0"
               fill="none"
@@ -42,14 +39,13 @@
       
       <div id="temperature-container">
           <div id="temperature">2°C</div>
-          <!-- Use icons for humidity and lux -->
            <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
               <div class="label" id="humidity">
-                <i class="fas fa-tint"></i> <!-- Drop icon for humidity -->
+                <i class="fas fa-tint"></i> 
                 45%
               </div>
               <div class="label" id="lux">
-                <i class="fas fa-sun"></i> <!-- Light icon for lux -->
+                <i class="fas fa-sun"></i> 
                 150
               </div>
            </div>
@@ -58,49 +54,23 @@
 
     <div id="interactBar"><button id="sleepButton" onclick="toggleSleep()">Start sleeping</button></div>
   </content>
-  <content id="left" style="background-color: red;">
 
-    <div id="statusBar">
-      <span></span>
-      <label>Preffered Settings</label>
-      <div id="time"></div>
-    </div>
-
-    
-    <div id="widget">
-      <svg id="loadBar" width="200" height="200" viewBox="0 0 200 200">
-          <!-- Background circle (border) -->
-          <circle cx="100" cy="100" r="90" fill="none" stroke="#ddd" stroke-width="10"></circle>
-          
-          <!-- Foreground path (progress bar) -->
-          <path
-              d="M 100, 100 m -90, 0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0"
-              fill="none"
-              stroke="#3498db"
-              stroke-width="10"
-              stroke-dasharray="565.48" 
-              stroke-dashoffset="565.48"
-              stroke-linecap="round"
-          ></path>
-      </svg>
-      
-      <div id="temperature-container">
-          <div id="temperature">2°C</div>
-          <!-- Use icons for humidity and lux -->
-           <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
-              <div class="label" id="humidity">
-                <i class="fas fa-tint"></i> <!-- Drop icon for humidity -->
-                45%
-              </div>
-              <div class="label" id="lux">
-                <i class="fas fa-sun"></i> <!-- Light icon for lux -->
-                150
-              </div>
-           </div>
+  <content id="left" class="dark">
+    <div class="card">
+      <h2>Preferred conditions</h2>
+      <div>
+        <div> Temperature: <label id="preferredTemperature">20°C</label></div>
+        <div> Humidity: <label id="preferredHumidity">20%</label></div>
+        <div>Lux: <label id="preferredLux">168</label></div>
       </div>
     </div>
+      <div class="card" id="metricsCard">
+        <h2>Preferred conditions</h2>
+        <canvas id="metricsChart" style="height: 69vh;"></canvas>
+      </div>
+    </main>
+  
 
-    <div id="interactBar"><button id="sleepButton" onclick="toggleSleep()">Start sleeping</button></div>
   </content>
   <content id="right" style="background-color: blue;">
     <div id="statusBar">
@@ -124,4 +94,7 @@
 <script src="./js/sleep.js"></script>
 <script src="./js/GETandUpdate.js"></script>
 <script src="./js/swipeNavigation.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./js/app.js"></script>
 </html>

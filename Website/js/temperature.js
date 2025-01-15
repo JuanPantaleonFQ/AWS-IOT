@@ -1,10 +1,8 @@
 
 function tempAndLux() {
     var temp = parseFloat($("#temperature").text().trim());
-    var lux = parseFloat($("#lux").text().trim());
     // Normalize the temperature to a value between 0 and 1
     let normalizedTemp = temp / 50;
-    let normalizedLux = 800 - 700;
 
     // Interpolate colors based on the temperature
     let r = Math.min(255, Math.floor(255 * normalizedTemp)); // Red increases with temp
