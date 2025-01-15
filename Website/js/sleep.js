@@ -48,7 +48,7 @@ $(document).ready(function () {
 
     // When an icon (score) is clicked, it should submit the score and stop the session
     $('.sleep-icon').on('click', function () {
-        const score = $(this).data('score');  // Get the score from the clicked icon (1-5)
+        const score = $(this).attr('data-icon');
         const stopTime = new Date().toISOString();  // Capture the stop time
         const sleepId = $('#sleepButton').data('sleepId');  // Get the sleep session ID from the button
 
