@@ -1,5 +1,5 @@
 var datetime = "now";
-var period = 120;
+var period = 5;
 
 const ctx = document.getElementById('metricsChart').getContext('2d');
 let metricsChart;
@@ -148,5 +148,5 @@ function getRealTimeMetrics(datetime, period) {
 createChart();
 
 setInterval(function() {
-  getRealTimeMetrics("now", 5); // Call with "now" for real-time data and 5-minute period
-}, 300000); 
+  getRealTimeMetrics("now", 5);
+}, period * 60 * 1000); 
