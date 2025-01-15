@@ -231,6 +231,7 @@ function getLastSleepRecords(x, callback) {
   
   // Function to call backend and get real-time metrics
   function getRealTimeMetrics(datetime, period, callback) {
+    if(datetime == "now")datetime = new Date().toISOString().slice(0, 16);
     $.ajax({
       url: '/get-realtime-metrics',
       type: 'POST',
