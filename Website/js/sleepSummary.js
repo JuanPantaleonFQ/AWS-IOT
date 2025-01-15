@@ -245,12 +245,13 @@ async function populateGraphWithAverage(graph, x, dynamic) {
         }
 
         // Loop through all sleep records
-        for (let record of sleepRecords) {
+        for (var n = 0; n < sleepRecords.length; n++) {
+            let record =  sleepRecords[n];
             const startDate = new Date(record.start_date);
             const endDate = record.end_date ? new Date(record.end_date) : new Date(); // Use current time if no end_date
 
             if (dynamic) {
-                graph = await createChartForSleepAnalysis(`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
+                graph = await createChartForSleepAnalysis(n,`${startDate.getDate().toString().padStart(2, '0')}/${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getFullYear().toString().slice(-2)}`);
             }
 
             // Calculate the number of minutes slept for the current sleep record

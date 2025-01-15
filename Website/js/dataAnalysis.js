@@ -1,4 +1,4 @@
-async function createChartForSleepAnalysis(date) {
+async function createChartForSleepAnalysis(n, date) {
     // Select the container where the charts will be added
     const container = document.querySelector('#right');
 
@@ -31,7 +31,7 @@ async function createChartForSleepAnalysis(date) {
 
     // Initialize the chart
     const ctx = canvas.getContext('2d');
-    const graph = new Chart(ctx, {
+    charts[n] = new Chart(ctx, {
         type: 'line',
         data: {
             labels: [],  // Time labels
