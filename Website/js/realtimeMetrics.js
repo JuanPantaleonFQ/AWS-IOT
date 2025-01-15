@@ -1,5 +1,5 @@
 var datetime = "now";
-var period = 60;
+var period = 120;
 
 const ctx = document.getElementById('metricsChart').getContext('2d');
 let metricsChart;
