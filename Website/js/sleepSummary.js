@@ -284,7 +284,7 @@ function updateQualityGraph(datetime, metrics) {
     charts.nightly.update();
 }
 
-async function opulateGraphWithScore(nDays){
+async function populateGraphWithScore(nDays){
     const sleepRecords = await getLastSleepRecords(nDays);
 
     for(var i = 0; i < sleepRecords.length; i++){
@@ -296,9 +296,10 @@ async function opulateGraphWithScore(nDays){
             w1: w1,
             w2: w2,
             w3: w3
-          };
+        };
+        console.log(sleepDay)
         $.ajax({
-            url: '/calculate-sleeping-score', // Endpoint for score calculation
+            url: '/calculate-sleeping-score',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(sleepDay),
@@ -318,6 +319,6 @@ $(document).ready(function () {
   // Call the function to populate the graph with the most recent sleep data
   if(!sleeping){
     populateGraphWithAverage(1);
-    opulateGraphWithScore(15);
+    populateGraphWithScore(15);
   }
 }); 
