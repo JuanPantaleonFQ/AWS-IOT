@@ -111,9 +111,8 @@ function createChart() {
 // Initialize
 createChart();
 
-// Function to call backend and get real-time metrics
 function getRealTimeMetrics(datetime, period, callback) {
-  if(datetime == "now")datetime = new Date().toISOString().slice(0, 16);
+  if (datetime === "now") datetime = new Date().toISOString().slice(0, 16);
   $.ajax({
     url: '/get-realtime-metrics',
     type: 'POST',
@@ -123,22 +122,35 @@ function getRealTimeMetrics(datetime, period, callback) {
       period: period
     }),
     success: function(response) {
-      console.log(response);
-      callback(null, response);  // Call the callback with the response data
+      console.log("Response received:", response);
+      callback(null, response);
     },
     error: function(error) {
-      callback(error, null);  // Call the callback with the error
+      console.error("Error during AJAX request:", error);
+      callback(error, null);
     }
   });
 }
 
 setInterval(function () {
-  getRealTimeMetrics("now", 5, function (error, response) {
+  const period = 5; // Make sure `period` is defined
+  getRealTimeMetrics("now", period, function (error, response) {
     if (error) {
-      console.error("Error fetching metrics:", error); // Log the error
-      return; // Exit early if there's an error
+      console.error("Error fetching metrics:", error);
+      return;
+    }
+
+    if (!response) {
+      console.error("Response is null or undefined");
+      return;
     }
 
     console.log("Metrics received:", response);
+    if (response.averageTemperature !== undefined) {
+      console.log("Average Temperature:", response.averageTemperature);
+    } else {
+      console.error("averageTemperature is not defined in the response");
+    }
   });
-}, period * 60 * 1000);
+}, 5 * 60 * 1000);
+
