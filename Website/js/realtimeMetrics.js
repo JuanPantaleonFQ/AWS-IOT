@@ -134,23 +134,28 @@ function getRealTimeMetrics(datetime, period, callback) {
 
 setInterval(function () {
   const period = 5; // Make sure `period` is defined
-  getRealTimeMetrics("now", period, function (error, response) {
+  getRealTimeMetrics("now", 5, function (error, response) {
     if (error) {
       console.error("Error fetching metrics:", error);
       return;
     }
-
+  
+    console.log("Response received:", response);
+    console.log("Type of response:", typeof response); // Log the type
+    console.log("Response is null:", response === null); // Check if null
+    console.log("Response is undefined:", response === undefined); // Check if undefined
+  
     if (!response) {
       console.error("Response is null or undefined");
       return;
     }
-
-    console.log("Metrics received:", response);
+  
     if (response.averageTemperature !== undefined) {
       console.log("Average Temperature:", response.averageTemperature);
     } else {
       console.error("averageTemperature is not defined in the response");
     }
   });
+  
 }, 5 * 60 * 1000);
 
