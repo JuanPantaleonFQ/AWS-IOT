@@ -51,7 +51,6 @@ content{
     display: flex;
     flex-direction: column;
     
-    padding-top: 4rem;
 }
 #right{
   right: -100%;
@@ -60,6 +59,7 @@ content{
   flex-direction: column;
   top: 0;
   box-sizing: border-box;
+  padding-top: 4rem;
 }
 #down{
  bottom:-100%;
