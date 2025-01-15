@@ -17,7 +17,7 @@ async function createChartForSleepAnalysis(n, date) {
     title.textContent = date;
 
     const canvas = document.createElement('canvas');
-    canvas.id = 'nightlyChart';
+    canvas.id = 'nightlyChart' + n;
     canvas.style.display = 'block';
     canvas.style.boxSizing = 'border-box';
     canvas.style.height = '162px';
